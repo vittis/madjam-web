@@ -88,6 +88,12 @@ interface UnitProps {
 
 const UNIT_SIZE = "75%";
 
+const PROGRESS_COLOR = {
+    HP: "#BD0215",
+    ARMOR: "#024ABD",
+    ACTION: "#12bd02"
+}
+
 const Unit = ({ unit, running }: UnitProps) => {
 
     const hpPercentage = (unit.stats.hp / unit.stats.maxHp) * 100;
@@ -107,8 +113,6 @@ const Unit = ({ unit, running }: UnitProps) => {
             <PopoverTrigger>
                 <Flex alignItems="center" justifyContent="center" width="100%" height="100%">
                     <Box
-                        //bg={`linear-gradient(to top, #e84b2f2a ${hpPercentage}%, transparent ${hpPercentage}%)`}
-                        //bg={unit?.owner === "P1" ? "#e84b2fb0" : "#714edaae"}
                         bgImage={`/assets/character/${character}.svg`}
                         bgSize="contain"
                         bgPos="center"
@@ -117,46 +121,57 @@ const Unit = ({ unit, running }: UnitProps) => {
                         width={UNIT_SIZE}
                         position="relative"
                         fontSize="sm"
-                    //borderRadius="50%"
-                    //boxShadow={"dark-lg"}
-                    //transition='transition 0.5s linear'
                     >
 
                         <Progress
                             top="-10px"
                             size="sm"
                             value={hpPercentage < 0 ? 0 : hpPercentage}
-                            colorScheme="green"
+                            //colorScheme="green"
+                            bgColor="transparent"
+                            border="1px solid #FFFFFF"
+                            borderRadius="4px"
                             sx={{
                                 "div[role='progressbar']": {
                                     transition: "width 0.2s",
+                                    bgColor: PROGRESS_COLOR.HP
                                 },
                             }}
                         />
                         <Progress
-                            top="-10px"
+                            top="-18px"
                             size="sm"
                             value={armorPercentage < 0 ? 0 : armorPercentage}
-                            colorScheme="gray"
+                            //colorScheme="gray"
+                            bgColor="transparent"
+                            border="1px solid #FFFFFF"
+                            borderRadius="4px"
                             sx={{
                                 "div[role='progressbar']": {
                                     transition: "width 0.2s",
+                                    bgColor: PROGRESS_COLOR.ARMOR
                                 },
                             }}
                         />
                         <Progress
                             top="25%"
                             left="60%"
+                            size="sm"
                             value={progressAP}
-                            colorScheme={
+                            /* colorScheme={
                                 unit.currentAction === "move" ? "twitter" : "red"
-                            }
+                            } */
+                            colorScheme="karpov"
+                            bgColor="transparent"
                             transform="rotate(-90deg)"
+                            border="1px solid #FFFFFF"
+                            borderRadius="4px"
                             sx={
                                 progressAP > apTransitionThreshold && running
                                     ? {
                                         "div[role='progressbar']": {
                                             transition: "width 0.2s",
+                                            //bgColor: PROGRESS_COLOR.ACTION
                                         },
                                     }
                                     : undefined
