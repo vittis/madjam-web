@@ -1,27 +1,22 @@
 import { ChevronLeftIcon, Icon } from "@chakra-ui/icons";
 import {
-  Box,
   Flex,
-  IconButton,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverTrigger,
-  Progress,
-  SimpleGrid,
+  IconButton, SimpleGrid,
   Slider,
   SliderFilledTrack,
   SliderThumb,
   SliderTrack,
-  Text,
+  Text
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { BsFillPauseFill, BsFillPlayFill } from "react-icons/bs";
+import Tile from "../../components/Game/tile";
 import { useWsClient } from "../../context/socketContext";
 import useSubscribe from "../../context/useSubscribe";
+
+const MAX_COL = 8;
+const MAX_ROW = 5;
 
 const Game = () => {
   const router = useRouter();
@@ -127,132 +122,21 @@ const Game = () => {
         )}
       </Flex>
 
-      <SimpleGrid columns={7} spacing={1}>
-        {Array.from(Array(35), (_, i) => {
-          const row = Math.floor(i / 7);
-          let col = ((i + 1) % 7) - 1;
-          col = col === -1 ? 6 : col;
+      <Flex alignItems="center" justifyContent="center">
+        <SimpleGrid columns={MAX_COL} spacing={0} width={MAX_COL * 110}>
+          {Array.from(Array(MAX_COL * MAX_ROW), (_, i) => {
+            const row = Math.floor(i / MAX_COL);
+            let col = ((i + 1) % MAX_COL) - 1;
+            col = col === -1 ? MAX_COL - 1 : col;
 
-          const unit = currentStep?.units.find(
-            (unit) => unit.row === row && unit.col === col
-          );
-
-          if (!unit) {
-            return (
-              <Box
-                bg="#e84b2f1d"
-                height="110px"
-                width="110px"
-                position="relative"
-              >
-                <Box position="absolute" right="0" top="0">
-                  {col}, {row}{" "}
-                </Box>
-              </Box>
+            const unit = currentStep?.units.find(
+              (unit) => unit.row === row && unit.col === col
             );
-          }
 
-          const hpPercentage = (unit.stats.hp / unit.stats.maxHp) * 100;
-
-          const armorPercentage =
-            (unit.stats.armorHp / unit.stats.maxArmorHp) * 100;
-
-          const progressAP = (unit.stats.ap * 100) / 1000;
-
-          const apTransitionThreshold = unit.stats.quickness >= 15 ? 15 : 6;
-          return (
-            <Popover placement="top-start">
-              {/* @ts-ignore */}
-              <PopoverTrigger>
-                <Box
-                  //bg={`linear-gradient(to top, #e84b2f2a ${hpPercentage}%, transparent ${hpPercentage}%)`}
-                  bg={unit?.owner === "P1" ? "#e84b2fb0" : "#714edaae"}
-                  height="110px"
-                  width="110px"
-                  position="relative"
-                  fontSize="sm"
-                >
-                  <Box position="absolute" right="0" top="0">
-                    {col}, {row}{" "}
-                  </Box>
-                  {unit?.backgrounds?.[0].name.substring(0, 2)}{" "}
-                  {unit?.backgrounds?.[1].name.substring(0, 2)}{" "}
-                  {unit.currentAction}
-                  <Progress
-                    value={progressAP}
-                    colorScheme={
-                      unit.currentAction === "move" ? "twitter" : "red"
-                    }
-                    transform="translate(55%, 208%) rotate(-90deg)"
-                    sx={
-                      progressAP > apTransitionThreshold && running
-                        ? {
-                            "div[role='progressbar']": {
-                              transition: "width 0.2s",
-                            },
-                          }
-                        : undefined
-                    }
-                  />
-                  <Box>{unit.equipment.mainHandWeapon.name}</Box>
-                  HP: {unit.stats.hp} / {unit.stats.maxHp}
-                  <Progress
-                    size="sm"
-                    value={hpPercentage < 0 ? 0 : hpPercentage}
-                    colorScheme="green"
-                    sx={{
-                      "div[role='progressbar']": {
-                        transition: "width 0.2s",
-                      },
-                    }}
-                  />
-                  Armor: {unit.stats.armorHp} / {unit.stats.maxArmorHp}
-                  <Progress
-                    size="sm"
-                    value={armorPercentage}
-                    colorScheme="gray"
-                    sx={{
-                      "div[role='progressbar']": {
-                        transition: "width 0.2s",
-                      },
-                    }}
-                  />
-                </Box>
-              </PopoverTrigger>
-              <PopoverContent _focus={{ border: "#8b0000 solid 2px" }}>
-                <PopoverArrow />
-                <PopoverCloseButton />
-                <PopoverBody>
-                  <Box>
-                    Str: <b>{unit.stats.str}</b>
-                  </Box>
-                  <Box>
-                    Dex: <b>{unit.stats.dex}</b>
-                  </Box>
-                  <Box>
-                    Quickness: <b>{unit.stats.quickness}</b>
-                  </Box>
-                  <Box>
-                    Weapon: <b>{unit.equipment.mainHandWeapon.name}</b> (dmg:{" "}
-                    <b>{unit.equipment.mainHandWeapon.damage.min}</b>){" "}
-                    (effective: <b>{unit.stats.mainHandDamage.min}</b>)
-                  </Box>
-                  <Box></Box>
-                  <Box>
-                    Head: <b>{unit.equipment.head.name}</b>
-                  </Box>
-                  <Box>
-                    Body: <b>{unit.equipment.chest.name}</b>
-                  </Box>
-                  <Box>
-                    Armor type: <b>{unit.stats.armorType}</b>
-                  </Box>
-                </PopoverBody>
-              </PopoverContent>
-            </Popover>
-          );
-        })}
-      </SimpleGrid>
+            return <Tile col={col} row={row} unit={unit} running={running} />
+          })}
+        </SimpleGrid>
+      </Flex>
 
       {/* history && history.units.map() */}
 

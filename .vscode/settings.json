@@ -2,16 +2,23 @@
   "postcss.validate": false,
   "css.validate": false,
   "scss.validate": false,
-  "stylelint.validate": ["css", "less", "postcss", "scss"],
+  "stylelint.validate": [
+    "css",
+    "less",
+    "postcss",
+    "scss"
+  ],
   "editor.codeActionsOnSave": {
     "source.organizeImports": true,
     "source.fixAll.stylelint": true
   },
-  "files.associations": { "*.scss": "postcss" },
+  "files.associations": {
+    "*.scss": "postcss"
+  },
   "[postcss]": {
     "editor.defaultFormatter": "stylelint.vscode-stylelint"
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   }
 }
