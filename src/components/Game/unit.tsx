@@ -99,21 +99,27 @@ const Unit = ({ unit, running }: UnitProps) => {
 
     const apTransitionThreshold = unit.stats.quickness >= 15 ? 15 : 6;
 
+    const character = unit.owner === "P1" ? 'rat' : 'frog'
+
     return (
         <Popover placement="top-start">
             {/* @ts-ignore */}
-
             <PopoverTrigger>
                 <Flex alignItems="center" justifyContent="center" width="100%" height="100%">
                     <Box
                         //bg={`linear-gradient(to top, #e84b2f2a ${hpPercentage}%, transparent ${hpPercentage}%)`}
-                        bg={unit?.owner === "P1" ? "#e84b2fb0" : "#714edaae"}
+                        //bg={unit?.owner === "P1" ? "#e84b2fb0" : "#714edaae"}
+                        bgImage={`/assets/character/${character}.svg`}
+                        bgSize="contain"
+                        bgPos="center"
+                        bgRepeat="no-repeat"
                         height={UNIT_SIZE}
                         width={UNIT_SIZE}
                         position="relative"
                         fontSize="sm"
-                        borderRadius="50%"
-                        transition='transition 0.5s linear'
+                    //borderRadius="50%"
+                    //boxShadow={"dark-lg"}
+                    //transition='transition 0.5s linear'
                     >
 
                         <Progress
@@ -158,7 +164,7 @@ const Unit = ({ unit, running }: UnitProps) => {
                         />
 
                         <UnitIcon type={ICON_TYPE.WEAPON} />
-                        <UnitIcon type={ICON_TYPE.ARMOR} />
+                        <UnitIcon type={ICON_TYPE.CHEST} />
                         {/* <UnitIcon type={ICON_TYPE.ACTION} /> */}
                     </Box>
                 </Flex>
