@@ -16,7 +16,6 @@ import {
 } from "@chakra-ui/react";
 import * as Colyseus from "colyseus.js";
 import type { NextPage } from "next";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 
@@ -98,42 +97,6 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <Box position="fixed" top="0" left="0">
-        <Image
-          alt="bagui"
-          src="/assets/rock-top-left.svg"
-          height={250}
-          width={250}
-        />
-      </Box>
-
-      <Box position="fixed" bottom="-5px" left="-26px">
-        <Image
-          alt="bagui"
-          src="/assets/rock-bottom-left.svg"
-          height={250}
-          width={250}
-        />
-      </Box>
-
-      <Box position="fixed" bottom="-5px" right="0">
-        <Image
-          alt="bagui"
-          src="/assets/rock-bottom-right.svg"
-          height={250}
-          width={250}
-        />
-      </Box>
-
-      <Box position="fixed" top="-5px" right="0">
-        <Image
-          alt="bagui"
-          src="/assets/rock-top-right.svg"
-          height={250}
-          width={250}
-        />
-      </Box>
-
       <Modal
         onClose={() => {}}
         closeOnOverlayClick={false}

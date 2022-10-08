@@ -2,12 +2,7 @@
   "postcss.validate": false,
   "css.validate": false,
   "scss.validate": false,
-  "stylelint.validate": [
-    "css",
-    "less",
-    "postcss",
-    "scss"
-  ],
+  "stylelint.validate": ["css", "less", "postcss", "scss"],
   "editor.codeActionsOnSave": {
     "source.organizeImports": true,
     "source.fixAll.stylelint": true
@@ -19,6 +14,6 @@
     "editor.defaultFormatter": "stylelint.vscode-stylelint"
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }
