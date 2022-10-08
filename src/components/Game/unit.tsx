@@ -1,5 +1,5 @@
 import { Box, Flex, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverTrigger, Progress } from "@chakra-ui/react";
-import UnitIcon, { ICON_TYPE } from "./unitIcon";
+import Weapon from "./weapon";
 
 enum ARMOR_TYPE {
     LIGHT = "light",
@@ -86,12 +86,13 @@ interface UnitProps {
     running: boolean;
 }
 
-const UNIT_SIZE = "75%";
+const UNIT_SIZE = "60%";
 
 const PROGRESS_COLOR = {
     HP: "#BD0215",
     ARMOR: "#024ABD",
-    ACTION: "#12bd02"
+    ACTION: "#12bd02",
+    BORDER: "#000000"
 }
 
 const Unit = ({ unit, running }: UnitProps) => {
@@ -111,7 +112,7 @@ const Unit = ({ unit, running }: UnitProps) => {
         <Popover placement="top-start">
             {/* @ts-ignore */}
             <PopoverTrigger>
-                <Flex alignItems="center" justifyContent="center" width="100%" height="100%">
+                <Flex alignItems="center" justifyContent="start" width="100%" height="100%">
                     <Box
                         bgImage={`/assets/character/${character}.svg`}
                         bgSize="contain"
@@ -124,12 +125,14 @@ const Unit = ({ unit, running }: UnitProps) => {
                     >
 
                         <Progress
-                            top="-10px"
+                            width="100px"
+                            top="-17px"
+                            left="15px"
                             size="sm"
                             value={hpPercentage < 0 ? 0 : hpPercentage}
                             //colorScheme="green"
                             bgColor="transparent"
-                            border="1px solid #FFFFFF"
+                            border={`1px solid ${PROGRESS_COLOR.BORDER}`}
                             borderRadius="4px"
                             sx={{
                                 "div[role='progressbar']": {
@@ -139,12 +142,14 @@ const Unit = ({ unit, running }: UnitProps) => {
                             }}
                         />
                         <Progress
-                            top="-18px"
+                            width="100px"
+                            top="-25px"
+                            left="15px"
                             size="sm"
                             value={armorPercentage < 0 ? 0 : armorPercentage}
                             //colorScheme="gray"
                             bgColor="transparent"
-                            border="1px solid #FFFFFF"
+                            border={`1px solid ${PROGRESS_COLOR.BORDER}`}
                             borderRadius="4px"
                             sx={{
                                 "div[role='progressbar']": {
@@ -154,8 +159,9 @@ const Unit = ({ unit, running }: UnitProps) => {
                             }}
                         />
                         <Progress
-                            top="25%"
-                            left="60%"
+                            width="100px"
+                            top="18px"
+                            left="-61px"
                             size="sm"
                             value={progressAP}
                             /* colorScheme={
@@ -164,7 +170,7 @@ const Unit = ({ unit, running }: UnitProps) => {
                             colorScheme="karpov"
                             bgColor="transparent"
                             transform="rotate(-90deg)"
-                            border="1px solid #FFFFFF"
+                            border={`1px solid ${PROGRESS_COLOR.BORDER}`}
                             borderRadius="4px"
                             sx={
                                 progressAP > apTransitionThreshold && running
@@ -178,8 +184,13 @@ const Unit = ({ unit, running }: UnitProps) => {
                             }
                         />
 
-                        <UnitIcon type={ICON_TYPE.WEAPON} />
-                        <UnitIcon type={ICON_TYPE.CHEST} />
+                        <Box position="absolute" top="-27px" left="-5px" fontSize="1.2rem" textAlign="left">❤</Box>
+                        <Box position="absolute" top="77px" left="-22px" fontSize="1.2rem" textAlign="left">🏃‍♂️</Box>
+
+                        <Weapon />
+
+                        {/* <UnitIcon type={ICON_TYPE.WEAPON} /> */}
+                        {/* <UnitIcon type={ICON_TYPE.CHEST} /> */}
                         {/* <UnitIcon type={ICON_TYPE.ACTION} /> */}
                     </Box>
                 </Flex>

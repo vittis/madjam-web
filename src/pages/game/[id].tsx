@@ -123,7 +123,7 @@ const Game = () => {
       </Flex>
 
       <Flex alignItems="center" justifyContent="center">
-        <SimpleGrid columns={MAX_COL} spacing={0} width={MAX_COL * 110}>
+        <SimpleGrid columns={MAX_COL} spacingX='20px' spacingY='20px' width={MAX_COL * 150}>
           {Array.from(Array(MAX_COL * MAX_ROW), (_, i) => {
             const row = Math.floor(i / MAX_COL);
             let col = ((i + 1) % MAX_COL) - 1;
@@ -137,6 +137,11 @@ const Game = () => {
           })}
         </SimpleGrid>
       </Flex>
+
+      {/* hp ❤
+        movement 🏃‍♂️
+        attack ⚔ */}
+
 
       {/* history && history.units.map() */}
 
