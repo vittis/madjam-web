@@ -14,6 +14,7 @@ import {
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { gameRoom } from "..";
+import { assetMap } from "../../components/assetMap";
 import Card, { CardProps } from "../../components/Card/card";
 
 const card1 = {
@@ -134,7 +135,11 @@ export default function Setup() {
                   >
                     <Image
                       alt="icon"
-                      src={"/assets/weapon/shortBow.svg"}
+                      src={
+                        /* @ts-ignore */
+                        assetMap[background.name] ||
+                        "/assets/character/frog.svg"
+                      }
                       height="60px"
                       width="60px"
                     />
@@ -221,7 +226,10 @@ export default function Setup() {
                   >
                     <Image
                       alt="icon"
-                      src="/assets/weapon/shortBow.svg"
+                      src={
+                        /* @ts-ignore */
+                        assetMap[weapon.name] || "/assets/character/frog.svg"
+                      }
                       height="60px"
                       width="60px"
                     />
@@ -314,7 +322,10 @@ export default function Setup() {
                   >
                     <Image
                       alt="icon"
-                      src="/assets/weapon/shortBow.svg"
+                      src={
+                        /* @ts-ignore */
+                        assetMap[helmet.name] || "/assets/character/frog.svg"
+                      }
                       height="60px"
                       width="60px"
                     />
@@ -404,7 +415,8 @@ export default function Setup() {
                   >
                     <Image
                       alt="icon"
-                      src="/assets/weapon/shortBow.svg"
+                      /* @ts-ignore */
+                      src={assetMap[chest.name] || "/assets/character/frog.svg"}
                       height="60px"
                       width="60px"
                     />
