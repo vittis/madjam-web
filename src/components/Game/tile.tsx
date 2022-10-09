@@ -22,7 +22,7 @@ const Tile = ({ col, row, unit, running }: TileProps) => {
       height={TILE_SIZE}
       width={TILE_SIZE}
       position="relative"
-      //border="1px rgba(183, 183, 183, 0.1) solid"
+      border="1px rgba(183, 183, 183, 0.1) solid"
       borderRadius={4}
       borderStyle="dashed"
     >

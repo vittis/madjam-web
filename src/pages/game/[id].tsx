@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import ReactAudioPlayer from "react-audio-player";
 import { BsFillPauseFill, BsFillPlayFill } from "react-icons/bs";
 import { gameRoom } from "..";
 import Tile from "../../components/Game/tile";
@@ -119,6 +120,12 @@ const Game = () => {
           </>
         )}
       </Flex>
+
+      <ReactAudioPlayer
+        src="/audio/game.mp3"
+        autoPlay
+        loop
+      />
 
       <Flex alignItems="center" justifyContent="center">
         <SimpleGrid

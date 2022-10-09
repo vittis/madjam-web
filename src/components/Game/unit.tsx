@@ -1,13 +1,13 @@
 import {
-    Box,
-    Flex,
-    Popover,
-    PopoverArrow,
-    PopoverBody,
-    PopoverCloseButton,
-    PopoverContent,
-    PopoverTrigger,
-    Progress
+  Box,
+  Flex,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverTrigger,
+  Progress
 } from "@chakra-ui/react";
 import ActionArrow from "./actionArrow";
 import Weapon from "./weapon";
@@ -123,8 +123,8 @@ const Unit = ({ unit, running, position }: UnitProps) => {
   return (
     <>
     {unit.currentAction === ACTION_TYPE.MOVE ? (
-        <ActionArrow target={unit.actionTarget} position={position} action={ACTION_TYPE.MOVE} />
-    ) : <ActionArrow target={unit.actionTarget} position={position} action={ACTION_TYPE.ATTACK} />}
+        <ActionArrow target={unit.actionTarget} position={position} action={ACTION_TYPE.MOVE} owner={unit.owner} />
+    ) : <ActionArrow target={unit.actionTarget} position={position} action={ACTION_TYPE.ATTACK} owner={unit.owner} />}
     <Popover placement="top-start">
       {/* @ts-ignore */}
       <PopoverTrigger>
@@ -145,6 +145,7 @@ const Unit = ({ unit, running, position }: UnitProps) => {
             position="relative"
             fontSize="sm"
             transform={unit.owner === "P2" ? "scaleX(-1)" : ''}
+            transformOrigin="65px"
           >
             <Progress
               width="100px"
@@ -162,7 +163,7 @@ const Unit = ({ unit, running, position }: UnitProps) => {
                   bgColor: PROGRESS_COLOR.HP,
                 },
               }}
-              zIndex="-5"
+              zIndex="50"
               transform={unit.owner === "P2" ? "scaleX(-1)" : ''}
             />
 
@@ -182,7 +183,7 @@ const Unit = ({ unit, running, position }: UnitProps) => {
                   bgColor: PROGRESS_COLOR.ARMOR,
                 },
               }}
-              zIndex="-5"
+              zIndex="50"
               transform={unit.owner === "P2" ? "scaleX(-1)" : ''}
             />
 
@@ -207,7 +208,7 @@ const Unit = ({ unit, running, position }: UnitProps) => {
                     }
                   : undefined
               }
-              zIndex="-5"
+              zIndex="50"
               transform={unit.owner === "P2" ? "scaleX(-1)" : ''}
             />
             <Box
@@ -216,7 +217,7 @@ const Unit = ({ unit, running, position }: UnitProps) => {
               left={unit.owner === "P2" ? "95px" : "-5px"}
               fontSize="1.2rem"
               textAlign="left"
-              zIndex="-5"
+              zIndex="50"
               transform={unit.owner === "P2" ? "scaleX(-1)" : ''}
             >
               {unit.stats.armorHp > 0 && unit.stats.maxArmorHp > 0 ? "🛡" : "❤"}
@@ -227,13 +228,13 @@ const Unit = ({ unit, running, position }: UnitProps) => {
               right={unit.owner === "P2" ? "56px" : "-42px"}
               fontSize="1.2rem"
               textAlign="left"
-              zIndex="-5"
+              zIndex="50"
               transform={unit.owner === "P2" ? "scaleX(-1)" : ''}
             >
               {unit.currentAction === "move" ? "🏃" : unit.stats.atkRange > 1 ? "🏹" : "⚔"}
             </Box>
 
-            <Weapon />
+            <Weapon mainHandWeapon={unit.equipment.mainHandWeapon} />
 
             {/* <UnitIcon type={ICON_TYPE.WEAPON} /> */}
             {/* <UnitIcon type={ICON_TYPE.CHEST} /> */}

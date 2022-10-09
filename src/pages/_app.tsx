@@ -41,7 +41,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Component {...pageProps} />
       <Particles />
 
-      <Box position="fixed" top="0" left="0" zIndex={-1}>
+      <Box position="fixed" top="0" left="0" zIndex={-10}>
         <Image
           alt="bagui"
           src="/assets/rock-top-left.svg"
@@ -50,7 +50,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
       </Box>
 
-      <Box position="fixed" bottom="-5px" left="-26px" zIndex={-1}>
+      <Box position="fixed" bottom="-5px" left="-26px" zIndex={-10}>
         <Image
           alt="bagui"
           src="/assets/rock-bottom-left.svg"
@@ -59,7 +59,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
       </Box>
 
-      <Box position="fixed" bottom="-5px" right="0" zIndex={-1}>
+      <Box position="fixed" bottom="-5px" right="0" zIndex={-10}>
         <Image
           alt="bagui"
           src="/assets/rock-bottom-right.svg"
@@ -68,7 +68,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
       </Box>
 
-      <Box position="fixed" top="-5px" right="0" zIndex={-1}>
+      <Box position="fixed" top="-5px" right="0" zIndex={-10}>
         <Image
           alt="bagui"
           src="/assets/rock-top-right.svg"

@@ -1,4 +1,6 @@
-import { Box, Image } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
+import Image from "next/image";
+import { assetMap } from "../assetMap";
 
 export interface WeaponStats {
   damage: {
@@ -18,24 +20,32 @@ export interface WeaponData extends WeaponStats {
   name: string;
 }
 
-const AREA_SIZE = "90%";
-const IMG_SIZE = "90%";
+const AREA_SIZE = "110%";
+const IMG_SIZE = "110%";
 
-const Weapon = () => {
-  const top = "0px";
-  const left = "90%";
+interface WeaponProps {
+  mainHandWeapon: WeaponData;
+}
+
+const Weapon = ({mainHandWeapon}: WeaponProps) => {
+  const top = "-15px";
+  const left = "70%";
+
+  console.log('mainHandWeapon', mainHandWeapon)
 
   return (
-    <Box //bg="#DB1DE0"
+    <Box
       borderRadius="50%"
       width={AREA_SIZE}
       height={AREA_SIZE}
       top={top}
       left={left}
       position="relative"
+      zIndex="-5"
     >
       <Image
-        src="/assets/weapon/sword.svg"
+      /* @ts-ignore */
+        src={assetMap[mainHandWeapon.name]}
         width={IMG_SIZE}
         height={IMG_SIZE}
       />

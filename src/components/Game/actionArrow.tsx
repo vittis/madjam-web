@@ -5,9 +5,10 @@ interface ActionArrowProps {
   target?: { col: number, row: number };
   position: { col: number, row: number };
   action: ACTION_TYPE;
+  owner: "P1" | "P2";
 }
 
-const ActionArrow = ({target, position, action}:ActionArrowProps) => {
+const ActionArrow = ({ target, position, action, owner }:ActionArrowProps) => {
   const findPath = () => {
     if (!target) return ''
     if (position.col === target.col && position.row > target.row) return('top');
@@ -29,9 +30,10 @@ const ActionArrow = ({target, position, action}:ActionArrowProps) => {
       <Box
         position="absolute"
         width="430px"
-          height="430px"
-          left="calc(-100% - 32.5px)"
-          top="calc(-100% - 32.5px)"
+        height="430px"
+        left="calc(-100% - 32.5px)"
+        top="calc(-100% - 32.5px)"
+        transform={owner === 'P2' ? 'translateX(32.5px)' : ''}
       >
         <Image
           src={`/assets/arrow/${action.toLowerCase()}/${arrowLabel}.svg`}
