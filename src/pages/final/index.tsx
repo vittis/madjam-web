@@ -4,7 +4,7 @@ import {
   Heading,
   Modal,
   ModalContent,
-  ModalOverlay,
+  ModalOverlay
 } from "@chakra-ui/react";
 import Image from "next/image";
 import { useState } from "react";
@@ -62,6 +62,7 @@ export default function Final() {
 
         {options.map((option) => (
           <Button
+            key={option}
             color="black"
             width="300px"
             backgroundColor="pink"
