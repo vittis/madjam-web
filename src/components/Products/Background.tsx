@@ -8,7 +8,7 @@ import {
   PopoverCloseButton,
   PopoverContent,
   PopoverHeader,
-  PopoverTrigger,
+  PopoverTrigger
 } from "@chakra-ui/react";
 import { assetMap } from "../assetMap";
 
@@ -87,7 +87,7 @@ export default function Background({ background, onSelect, gold, onBuy }: any) {
             </PopoverHeader>
             <PopoverBody>
               <Box>
-                🩸 HP : <b>{background.hp}</b>
+                ❤ HP : <b>{background.hp}</b>
               </Box>
 
               <Box>

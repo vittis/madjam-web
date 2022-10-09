@@ -10,6 +10,7 @@ import {
   Progress
 } from "@chakra-ui/react";
 import ActionArrow from "./actionArrow";
+import UnitIcon from "./unitIcon";
 import Weapon from "./weapon";
 
 enum ARMOR_TYPE {
@@ -36,7 +37,7 @@ interface UnitStats {
   atkRange: number;
 }
 
-interface BackgroundData {
+export interface BackgroundData {
   name: string;
   str: number;
   dex: number;
@@ -236,13 +237,11 @@ const Unit = ({ unit, running, position }: UnitProps) => {
 
             <Weapon mainHandWeapon={unit.equipment.mainHandWeapon} />
 
-            {/* <UnitIcon type={ICON_TYPE.WEAPON} /> */}
+            <UnitIcon background={unit.backgrounds[0].name} owner={unit.owner} />
             {/* <UnitIcon type={ICON_TYPE.CHEST} /> */}
             {/* <UnitIcon type={ICON_TYPE.ACTION} /> */}
           </Box>
-          
-          <Box position="absolute" />
-        </Flex>
+                  </Flex>
       </PopoverTrigger>
 
       <PopoverContent _focus={{ border: "#8b0000 solid 2px" }}>

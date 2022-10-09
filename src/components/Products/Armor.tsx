@@ -7,7 +7,7 @@ import {
   PopoverCloseButton,
   PopoverContent,
   PopoverHeader,
-  PopoverTrigger,
+  PopoverTrigger
 } from "@chakra-ui/react";
 import Image from "next/image";
 import { assetMap } from "../assetMap";
@@ -87,7 +87,7 @@ function Armor({ armor, onSelect, gold, onBuy }: any) {
             </PopoverHeader>
             <PopoverBody>
               <Box>
-                🩸 HP Armadura: <b>{armor.armorHp}</b>
+                🛡 Armadura: <b>{armor.armorHp}</b>
               </Box>
 
               <Box>

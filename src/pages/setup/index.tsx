@@ -4,8 +4,9 @@ import {
   Divider,
   Flex,
   Heading,
-  ScaleFade,
-  Wrap,
+  Modal, ModalContent, ModalOverlay, ScaleFade,
+  Text,
+  Wrap
 } from "@chakra-ui/react";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
@@ -43,6 +44,8 @@ export default function Setup() {
 
   const [selected, setSelected] = useState<any>(false);
   const hasSelection = !!selected;
+  
+  const [isRulesModalOpen, setIsRulesModalOpen] = useState<boolean>(false);
 
   const addCard = () => {
     const cardTemplate = {
@@ -148,6 +151,75 @@ export default function Setup() {
             width="100px"
           />
         </Flex>
+
+        <Button position="absolute" borderRadius="50%" right="0px" fontSize="32px" padding="30px 15px" colorScheme="purple" onClick={() => setIsRulesModalOpen(true)}>📖</Button>
+        <Modal
+          onClose={() => setIsRulesModalOpen(false)}
+          closeOnOverlayClick={true}
+          isOpen={isRulesModalOpen}
+          isCentered
+          size="2xl"
+        >
+          <ModalOverlay />
+          <ModalContent padding="20px" backgroundColor="purple.900" fontWeight="bold">
+            <Text
+              maxWidth="800px"
+              //textShadow="3px 3px 10px #bb0e98df"
+              //mt={12}
+              size="sm"
+            >
+              Seja bem-vindo Comandante, irei explicar um pouco sobre o nosso combate.
+            </Text>
+            <Text
+              maxWidth="800px"
+              //textShadow="3px 3px 10px #bb0e98df"
+              mt={6}
+              size="sm"
+            >
+              Nessa primeira fase, você deve utilizar seus recursos para montar seu time. Basta selecionar o recurso que deseja adicionar e a tropa a qual ele será integrado. Você possui um limite de 5 tropas, então conte bem seus recursos.
+            </Text>
+            <Text
+              maxWidth="800px"
+              //textShadow="3px 3px 10px #bb0e98df"
+              mt={6}
+              size="sm"
+            >
+              Existem 4 tipos de recursos: 🐱‍🚀 Tropas, ⚔ Armas, 🛡 Armaduras e ⛑ Capacetes, cada um com seus próprios preços e atributos. Os atributos são:
+            </Text>
+            <Text
+              maxWidth="800px"
+              //textShadow="3px 3px 10px #bb0e98df"
+              mt={6}
+              size="sm"
+            >
+              <Text as="span" color="red.400">🩸 Dano</Text> - Quantidade de dano por ataque (mínimo ao máximo)
+              <br/>
+              <Text as="span" color="red.400">❤ HP</Text> - Pontos de vida da tropa, se chegar a 0 ela morre
+              <br/>
+              <Text as="span" color="blue.400">🛡 Armadura</Text> - Pontos de vida da armadura, o <Text as="span" color="red.400">🩸 Dano</Text> levado é tirado primeiro dela
+              <br/>
+              <Text as="span" color="green.400">🍃 Agilidade</Text> e <Text as="span" color="green.400">🍃 Modificador de Agilidade</Text> - Modifica a velocidade na qual a tropa realiza suas ações (movimento e ataque), quanto maior, mais rápido
+              <br/>
+              <Text as="span" color="orange.400">🏋️‍♂️ Força</Text> e <Text as="span" color="gray.400">🤺 Destreza</Text> - São atributos que concedem bônus no dano das armas, quando elas tiverem 🏋️‍♂️ Modificador de Força ou 🤺 Modificador de Destreza, o seu atributo será multiplicado pelo modificador e adicionado ao dano total
+              <br/>
+              <Text as="span" color="red.400">🔪 Penetração</Text> - Porcentagem do dano que atravessa a <Text as="span" color="blue.400">🛡 Armadura</Text> e dá dano extra diretamente no <Text as="span" color="red.400">❤ HP</Text> do alvo
+              <br/>
+              <Text as="span" color="blue.400">🛡 Bônus vs Armadura</Text> - Porcentagem de dano extra em armadura
+              <br/>
+              <Text as="span" color="yellow.400">🎯 Alcance</Text> - Alcance dos ataques da arma
+              <br/>
+              <Text as="span" color="yellow.800">⚖ Peso</Text> - Peso do equipamento. Pesos maiores dão penalidade na <Text as="span" color="green.400">🍃 Agilidade</Text> da tropa. Até 5 de peso a tropa ganha um bônus de 30% de agilidade e acima de 12 de peso a tropa ganha uma penalidade de 30% de agilidade
+            </Text>
+            <Text
+              maxWidth="800px"
+              //textShadow="3px 3px 10px #bb0e98df"
+              mt={6}
+              size="sm"
+            >
+              Após montar o seu time e <Text as="span" color="green.600">Confirmar Esquadrão ✅</Text>, você entrará em combate contra o Comandante inimigo. Boa sorte!
+            </Text>
+          </ModalContent>
+        </Modal>
       </Box>
 
       <Button
