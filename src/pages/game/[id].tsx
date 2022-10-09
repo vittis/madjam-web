@@ -1,13 +1,10 @@
-import { ChevronLeftIcon, Icon } from "@chakra-ui/icons";
 import {
+  Button,
   Flex,
-  IconButton,
+  Modal,
+  ModalContent,
+  ModalOverlay,
   SimpleGrid,
-  Slider,
-  SliderFilledTrack,
-  SliderThumb,
-  SliderTrack,
-  Text
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -29,15 +26,20 @@ const Game = () => {
   const [running, setRunning] = useState(false);
 
   const [winner, setWinner] = useState("");
-  console.log({ winner });
+  const [animal, setMyAnimal] = useState("frog");
+  const [team, setMyTeam] = useState("");
+  const [players, setPlayers] = useState();
 
   useEffect(() => {
     gameRoom.send("askHistory", {});
 
     gameRoom.onMessage("sendHistory", (message) => {
-      console.log("CHEGOOO");
-      console.log(message.history);
       if (!running && message.history) {
+        setPlayers(message.players);
+        console.log("set my animal ", message.myAnimal);
+        setMyAnimal(message.myAnimal);
+        console.log("set my team ", message.myTeam);
+        setMyTeam(message.myTeam);
         setWinner(message.winner);
         setRunning(true);
         setAllHistory(message.history);
@@ -68,8 +70,25 @@ const Game = () => {
     setStepIndex(sliderValue);
   }, [sliderValue]);
 
+  const gameFinished = stepIndex === allHistory.length - 1;
+
   return (
     <>
+      <Modal
+        onClose={() => {}}
+        closeOnOverlayClick={false}
+        isOpen={gameFinished}
+        isCentered
+        size="sm"
+      >
+        <ModalOverlay />
+        <ModalContent textAlign="center" p={20} fontSize="2xl">
+          Fim do jogo! GG 👏
+          <Button mt={"16px"} onClick={() => router.push("/final")}>
+            Ver cena final 👉
+          </Button>
+        </ModalContent>
+      </Modal>
       <ReactAudioPlayer src="/audio/game.mp3" autoPlay loop />
 
       <Flex alignItems="center" justifyContent="center" mt={4}>
@@ -88,7 +107,18 @@ const Game = () => {
               (unit) => unit.row === row && unit.col === col
             );
 
-            return <Tile col={col} row={row} unit={unit} running={running} />;
+            return (
+              <Tile
+                // @ts-ignore
+                animal={animal}
+                team={team}
+                col={col}
+                row={row}
+                unit={unit}
+                running={running}
+                players={players}
+              />
+            );
           })}
         </SimpleGrid>
       </Flex>

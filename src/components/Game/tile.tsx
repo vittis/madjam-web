@@ -6,15 +6,26 @@ interface TileProps {
   row: number;
   unit?: UnitData;
   running: boolean;
+  animal?: string;
+  team?: string;
+  players?: any;
 }
 
 const TILE_SIZE = "130px";
 
-const Tile = ({ col, row, unit, running }: TileProps) => {
-    const position = {
-        col: col,
-        row: row
-    }
+const Tile = ({
+  col,
+  row,
+  unit,
+  running,
+  animal,
+  team,
+  players,
+}: TileProps) => {
+  const position = {
+    col: col,
+    row: row,
+  };
 
   return (
     <Box
@@ -29,7 +40,16 @@ const Tile = ({ col, row, unit, running }: TileProps) => {
       {/* <Box position="absolute" right="0" top="0">
                 {col}, {row}{" "}
             </Box> */}
-      {unit && <Unit unit={unit} running={running} position={position} />}
+      {unit && (
+        <Unit
+          animal={animal}
+          unit={unit}
+          running={running}
+          position={position}
+          team={team}
+          players={players}
+        />
+      )}
     </Box>
   );
 };

@@ -7,7 +7,7 @@ import {
   PopoverCloseButton,
   PopoverContent,
   PopoverTrigger,
-  Progress
+  Progress,
 } from "@chakra-ui/react";
 import ActionArrow from "./actionArrow";
 import UnitIcon from "./unitIcon";
@@ -84,7 +84,7 @@ export interface UnitData {
   backgrounds: BackgroundData[];
   equipment: Equipment;
   currentAction: ACTION_TYPE;
-  actionTarget?: {col: number, row:number};
+  actionTarget?: { col: number; row: number };
   // Temporary implementation of owner
   owner: "P1" | "P2";
 }
@@ -97,7 +97,10 @@ export enum ACTION_TYPE {
 interface UnitProps {
   unit: UnitData;
   running: boolean;
-  position: { col: number, row: number }
+  position: { col: number; row: number };
+  animal?: string;
+  team?: string;
+  players?: any;
 }
 
 const UNIT_SIZE = "60%";
@@ -109,7 +112,14 @@ const PROGRESS_COLOR = {
   BORDER: "#000000",
 };
 
-const Unit = ({ unit, running, position }: UnitProps) => {
+const Unit = ({
+  unit,
+  running,
+  position,
+  animal,
+  team,
+  players,
+}: UnitProps) => {
   const hpPercentage = (unit.stats.hp / unit.stats.maxHp) * 100;
 
   const armorPercentage =
@@ -119,180 +129,210 @@ const Unit = ({ unit, running, position }: UnitProps) => {
 
   const apTransitionThreshold = unit.stats.quickness >= 15 ? 15 : 6;
 
-  const character = unit.owner === "P1" ? "rat" : "frog";
+  const character =
+    // @ts-ignore
+    unit.owner === Object.values(players)?.[0].team
+      ? // @ts-ignore
+        Object.values(players)?.[1].animal
+      : // @ts-ignore
+        Object.values(players)?.[0].animal;
+
+  console.log({ character });
 
   return (
     <>
-    {unit.currentAction === ACTION_TYPE.MOVE ? (
-        <ActionArrow target={unit.actionTarget} position={position} action={ACTION_TYPE.MOVE} owner={unit.owner} />
-    ) : <ActionArrow target={unit.actionTarget} position={position} action={ACTION_TYPE.ATTACK} owner={unit.owner} />}
-    <Popover placement="top-start">
-      {/* @ts-ignore */}
-      <PopoverTrigger>
-        <Flex
-          alignItems="center"
-          justifyContent="start"
-          width="100%"
-          height="100%"
-          
-        >
-          <Box
-            bgImage={`/assets/character/${character}.svg`}
-            bgSize="contain"
-            bgPos="center"
-            bgRepeat="no-repeat"
-            height={UNIT_SIZE}
-            width={UNIT_SIZE}
-            position="relative"
-            fontSize="sm"
-            transform={unit.owner === "P2" ? "scaleX(-1)" : ''}
-            transformOrigin="65px"
+      {unit.currentAction === ACTION_TYPE.MOVE ? (
+        <ActionArrow
+          target={unit.actionTarget}
+          position={position}
+          action={ACTION_TYPE.MOVE}
+          owner={unit.owner}
+        />
+      ) : (
+        <ActionArrow
+          target={unit.actionTarget}
+          position={position}
+          action={ACTION_TYPE.ATTACK}
+          owner={unit.owner}
+        />
+      )}
+      <Popover placement="top-start">
+        {/* @ts-ignore */}
+        <PopoverTrigger>
+          <Flex
+            alignItems="center"
+            justifyContent="start"
+            width="100%"
+            height="100%"
           >
-            <Progress
-              width="100px"
-              top="-17px"
-              left="10px"
-              size="sm"
-              value={hpPercentage <= 0 ? 0 : hpPercentage}
-              //colorScheme="green"
-              bgColor="transparent"
-              border={`1px solid ${PROGRESS_COLOR.BORDER}`}
-              borderRadius="4px"
-              sx={{
-                "div[role='progressbar']": {
-                  transition: "width 0.2s",
-                  bgColor: PROGRESS_COLOR.HP,
-                },
-              }}
-              zIndex="50"
-              transform={unit.owner === "P2" ? "scaleX(-1)" : ''}
-            />
-
-            <Progress
-              width="100px"
-              top="-25px"
-              left="10px"
-              size="sm"
-              value={armorPercentage <= 0 ? 0 : armorPercentage}
-              //colorScheme="gray"
-              bgColor="transparent"
-              border={`1px solid ${PROGRESS_COLOR.BORDER}`}
-              borderRadius="4px"
-              sx={{
-                "div[role='progressbar']": {
-                  transition: "width 0.2s",
-                  bgColor: PROGRESS_COLOR.ARMOR,
-                },
-              }}
-              zIndex="50"
-              transform={unit.owner === "P2" ? "scaleX(-1)" : ''}
-            />
-
-            <Progress
-              width="100px"
-              bottom="-71px"
-              left="6px"
-              size="sm"
-              value={progressAP}
-              colorScheme={unit.currentAction === "move" ? "karpov" : "markov"}
-              /* colorScheme="karpov" */
-              bgColor="transparent"
-              border={`1px solid ${PROGRESS_COLOR.BORDER}`}
-              borderRadius="4px"
-              sx={
-                progressAP > apTransitionThreshold && running
-                  ? {
-                      "div[role='progressbar']": {
-                        transition: "width 0.2s",
-                        //bgColor: PROGRESS_COLOR.ACTION
-                      },
-                    }
-                  : undefined
-              }
-              zIndex="50"
-              transform={unit.owner === "P2" ? "scaleX(-1)" : ''}
-            />
             <Box
-              position="absolute"
-              top="-27px"
-              left={unit.owner === "P2" ? "95px" : "-5px"}
-              fontSize="1.2rem"
-              textAlign="left"
-              zIndex="50"
-              transform={unit.owner === "P2" ? "scaleX(-1)" : ''}
+              bgImage={`/assets/character/${character}.svg`}
+              bgSize="contain"
+              bgPos="center"
+              bgRepeat="no-repeat"
+              height={UNIT_SIZE}
+              width={UNIT_SIZE}
+              position="relative"
+              fontSize="sm"
+              transform={unit.owner === "P2" ? "scaleX(-1)" : ""}
+              transformOrigin="65px"
             >
-              {unit.stats.armorHp > 0 && unit.stats.maxArmorHp > 0 ? "🛡" : "❤"}
+              <Progress
+                width="100px"
+                top="-17px"
+                left="10px"
+                size="sm"
+                value={hpPercentage <= 0 ? 0 : hpPercentage}
+                //colorScheme="green"
+                bgColor="transparent"
+                border={`1px solid ${PROGRESS_COLOR.BORDER}`}
+                borderRadius="4px"
+                sx={{
+                  "div[role='progressbar']": {
+                    transition: "width 0.2s",
+                    bgColor: PROGRESS_COLOR.HP,
+                  },
+                }}
+                zIndex="50"
+                transform={unit.owner === "P2" ? "scaleX(-1)" : ""}
+              />
+
+              <Progress
+                width="100px"
+                top="-25px"
+                left="10px"
+                size="sm"
+                value={armorPercentage <= 0 ? 0 : armorPercentage}
+                //colorScheme="gray"
+                bgColor="transparent"
+                border={`1px solid ${PROGRESS_COLOR.BORDER}`}
+                borderRadius="4px"
+                sx={{
+                  "div[role='progressbar']": {
+                    transition: "width 0.2s",
+                    bgColor: PROGRESS_COLOR.ARMOR,
+                  },
+                }}
+                zIndex="50"
+                transform={unit.owner === "P2" ? "scaleX(-1)" : ""}
+              />
+
+              <Progress
+                width="100px"
+                bottom="-71px"
+                left="6px"
+                size="sm"
+                value={progressAP}
+                colorScheme={
+                  unit.currentAction === "move" ? "karpov" : "markov"
+                }
+                /* colorScheme="karpov" */
+                bgColor="transparent"
+                border={`1px solid ${PROGRESS_COLOR.BORDER}`}
+                borderRadius="4px"
+                sx={
+                  progressAP > apTransitionThreshold && running
+                    ? {
+                        "div[role='progressbar']": {
+                          transition: "width 0.2s",
+                          //bgColor: PROGRESS_COLOR.ACTION
+                        },
+                      }
+                    : undefined
+                }
+                zIndex="50"
+                transform={unit.owner === "P2" ? "scaleX(-1)" : ""}
+              />
+              <Box
+                position="absolute"
+                top="-27px"
+                left={unit.owner === "P2" ? "95px" : "-5px"}
+                fontSize="1.2rem"
+                textAlign="left"
+                zIndex="50"
+                transform={unit.owner === "P2" ? "scaleX(-1)" : ""}
+              >
+                {unit.stats.armorHp > 0 && unit.stats.maxArmorHp > 0
+                  ? "🛡"
+                  : "❤"}
+              </Box>
+              <Box
+                position="absolute"
+                top="75px"
+                right={unit.owner === "P2" ? "56px" : "-42px"}
+                fontSize="1.2rem"
+                textAlign="left"
+                zIndex="50"
+                transform={unit.owner === "P2" ? "scaleX(-1)" : ""}
+              >
+                {unit.currentAction === "move"
+                  ? "🏃"
+                  : unit.stats.atkRange > 1
+                  ? "🏹"
+                  : "⚔"}
+              </Box>
+
+              <Weapon mainHandWeapon={unit.equipment.mainHandWeapon} />
+
+              <UnitIcon
+                background={unit.backgrounds[0].name}
+                owner={unit.owner}
+              />
+              {/* <UnitIcon type={ICON_TYPE.CHEST} /> */}
+              {/* <UnitIcon type={ICON_TYPE.ACTION} /> */}
             </Box>
-            <Box
-              position="absolute"
-              top="75px"
-              right={unit.owner === "P2" ? "56px" : "-42px"}
-              fontSize="1.2rem"
-              textAlign="left"
-              zIndex="50"
-              transform={unit.owner === "P2" ? "scaleX(-1)" : ''}
-            >
-              {unit.currentAction === "move" ? "🏃" : unit.stats.atkRange > 1 ? "🏹" : "⚔"}
+          </Flex>
+        </PopoverTrigger>
+
+        <PopoverContent _focus={{ border: "#8b0000 solid 2px" }}>
+          <PopoverArrow />
+          <PopoverCloseButton />
+          <PopoverBody>
+            <Box>
+              Target:{" "}
+              <b>
+                {unit.actionTarget?.col}/{unit.actionTarget?.row}
+              </b>
             </Box>
-
-            <Weapon mainHandWeapon={unit.equipment.mainHandWeapon} />
-
-            <UnitIcon background={unit.backgrounds[0].name} owner={unit.owner} />
-            {/* <UnitIcon type={ICON_TYPE.CHEST} /> */}
-            {/* <UnitIcon type={ICON_TYPE.ACTION} /> */}
-          </Box>
-                  </Flex>
-      </PopoverTrigger>
-
-      <PopoverContent _focus={{ border: "#8b0000 solid 2px" }}>
-        <PopoverArrow />
-        <PopoverCloseButton />
-        <PopoverBody>
-          <Box>
-            Target:{" "}
-            <b>
-              {unit.actionTarget?.col}/{unit.actionTarget?.row}
-            </b>
-          </Box>
-          <Box>
-            Hp:{" "}
-            <b>
-              {unit.stats.hp}/{unit.stats.maxHp}
-            </b>
-          </Box>
-          <Box>
-            Armor:{" "}
-            <b>
-              {unit.stats.armorHp}/{unit.stats.maxArmorHp}
-            </b>
-          </Box>
-          <Box>
-            Str: <b>{unit.stats.str}</b>
-          </Box>
-          <Box>
-            Dex: <b>{unit.stats.dex}</b>
-          </Box>
-          <Box>
-            Quickness: <b>{unit.stats.quickness}</b>
-          </Box>
-          <Box>
-            Weapon: <b>{unit.equipment.mainHandWeapon.name}</b> (dmg:{" "}
-            <b>{unit.equipment.mainHandWeapon.damage.min}</b>) (effective:{" "}
-            <b>{unit.stats.mainHandDamage.min}</b>)
-          </Box>
-          <Box></Box>
-          <Box>
-            Head: <b>{unit.equipment.head.name}</b>
-          </Box>
-          <Box>
-            Body: <b>{unit.equipment.chest.name}</b>
-          </Box>
-          <Box>
-            Armor type: <b>{unit.stats.armorType}</b>
-          </Box>
-        </PopoverBody>
-      </PopoverContent>
-    </Popover>
+            <Box>
+              Hp:{" "}
+              <b>
+                {unit.stats.hp}/{unit.stats.maxHp}
+              </b>
+            </Box>
+            <Box>
+              Armor:{" "}
+              <b>
+                {unit.stats.armorHp}/{unit.stats.maxArmorHp}
+              </b>
+            </Box>
+            <Box>
+              Str: <b>{unit.stats.str}</b>
+            </Box>
+            <Box>
+              Dex: <b>{unit.stats.dex}</b>
+            </Box>
+            <Box>
+              Quickness: <b>{unit.stats.quickness}</b>
+            </Box>
+            <Box>
+              Weapon: <b>{unit.equipment.mainHandWeapon.name}</b> (dmg:{" "}
+              <b>{unit.equipment.mainHandWeapon.damage.min}</b>) (effective:{" "}
+              <b>{unit.stats.mainHandDamage.min}</b>)
+            </Box>
+            <Box></Box>
+            <Box>
+              Head: <b>{unit.equipment.head.name}</b>
+            </Box>
+            <Box>
+              Body: <b>{unit.equipment.chest.name}</b>
+            </Box>
+            <Box>
+              Armor type: <b>{unit.stats.armorType}</b>
+            </Box>
+          </PopoverBody>
+        </PopoverContent>
+      </Popover>
     </>
   );
 };

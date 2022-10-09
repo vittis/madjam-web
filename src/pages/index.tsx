@@ -50,7 +50,7 @@ const Home: NextPage = () => {
   //console.log("RENDER HOME");
   const router = useRouter();
 
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [introModalOpen, setIsIntroModalOpen] = useState(true);
   const [name, setName] = useState("");
   const [lobbyMembers, setLobbyMembers] = useState<any[]>([]);
@@ -126,6 +126,7 @@ const Home: NextPage = () => {
   useEffect(() => {
     if (localStorage.getItem("name")) {
       setIsIntroModalOpen(false);
+      setIsModalOpen(true);
     }
   }, []);
 

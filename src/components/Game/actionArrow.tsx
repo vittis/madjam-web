@@ -2,28 +2,32 @@ import { Box, Image } from "@chakra-ui/react";
 import { ACTION_TYPE } from "./unit";
 
 interface ActionArrowProps {
-  target?: { col: number, row: number };
-  position: { col: number, row: number };
+  target?: { col: number; row: number };
+  position: { col: number; row: number };
   action: ACTION_TYPE;
   owner: "P1" | "P2";
 }
 
-const ActionArrow = ({ target, position, action, owner }:ActionArrowProps) => {
+const ActionArrow = ({ target, position, action, owner }: ActionArrowProps) => {
   const findPath = () => {
-    if (!target) return ''
-    if (position.col === target.col && position.row > target.row) return('top');
-    if (position.col === target.col && position.row < target.row) return('bottom');
-    if (position.col > target.col && position.row === target.row) return('left');
-    if (position.col < target.col && position.row === target.row) return('right');
-    if (position.col > target.col && position.row > target.row) return('topLeft');
-    if (position.col > target.col && position.row < target.row) return('bottomLeft');
-    if (position.col < target.col && position.row > target.row) return('topRight');
-    if (position.col < target.col && position.row < target.row) return('bottomRight');
-  }
+    if (!target) return "";
+    if (position.col === target.col && position.row > target.row) return "top";
+    if (position.col === target.col && position.row < target.row)
+      return "bottom";
+    if (position.col > target.col && position.row === target.row) return "left";
+    if (position.col < target.col && position.row === target.row)
+      return "right";
+    if (position.col > target.col && position.row > target.row)
+      return "topLeft";
+    if (position.col > target.col && position.row < target.row)
+      return "bottomLeft";
+    if (position.col < target.col && position.row > target.row)
+      return "topRight";
+    if (position.col < target.col && position.row < target.row)
+      return "bottomRight";
+  };
 
   const arrowLabel = findPath();
-
-  console.log('arrow', arrowLabel);
 
   if (arrowLabel) {
     return (
@@ -33,7 +37,7 @@ const ActionArrow = ({ target, position, action, owner }:ActionArrowProps) => {
         height="430px"
         left="calc(-100% - 32.5px)"
         top="calc(-100% - 32.5px)"
-        transform={owner === 'P2' ? 'translateX(32.5px)' : ''}
+        transform={owner === "P2" ? "translateX(32.5px)" : ""}
       >
         <Image
           src={`/assets/arrow/${action.toLowerCase()}/${arrowLabel}.svg`}
@@ -47,7 +51,7 @@ const ActionArrow = ({ target, position, action, owner }:ActionArrowProps) => {
     );
   }
 
-  return <></>
+  return <></>;
 };
 
 export default ActionArrow;
