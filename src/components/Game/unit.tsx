@@ -1,14 +1,15 @@
 import {
-  Box,
-  Flex,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverTrigger,
-  Progress,
+    Box,
+    Flex,
+    Popover,
+    PopoverArrow,
+    PopoverBody,
+    PopoverCloseButton,
+    PopoverContent,
+    PopoverTrigger,
+    Progress
 } from "@chakra-ui/react";
+import ActionArrow from "./actionArrow";
 import Weapon from "./weapon";
 
 enum ARMOR_TYPE {
@@ -82,11 +83,12 @@ export interface UnitData {
   backgrounds: BackgroundData[];
   equipment: Equipment;
   currentAction: ACTION_TYPE;
+  actionTarget?: {col: number, row:number};
   // Temporary implementation of owner
   owner: "P1" | "P2";
 }
 
-enum ACTION_TYPE {
+export enum ACTION_TYPE {
   MOVE = "move",
   ATTACK = "attack",
 }
@@ -94,6 +96,7 @@ enum ACTION_TYPE {
 interface UnitProps {
   unit: UnitData;
   running: boolean;
+  position: { col: number, row: number }
 }
 
 const UNIT_SIZE = "60%";
@@ -105,7 +108,7 @@ const PROGRESS_COLOR = {
   BORDER: "#000000",
 };
 
-const Unit = ({ unit, running }: UnitProps) => {
+const Unit = ({ unit, running, position }: UnitProps) => {
   const hpPercentage = (unit.stats.hp / unit.stats.maxHp) * 100;
 
   const armorPercentage =
@@ -118,6 +121,10 @@ const Unit = ({ unit, running }: UnitProps) => {
   const character = unit.owner === "P1" ? "rat" : "frog";
 
   return (
+    <>
+    {unit.currentAction === ACTION_TYPE.MOVE ? (
+        <ActionArrow target={unit.actionTarget} position={position} action={ACTION_TYPE.MOVE} />
+    ) : <ActionArrow target={unit.actionTarget} position={position} action={ACTION_TYPE.ATTACK} />}
     <Popover placement="top-start">
       {/* @ts-ignore */}
       <PopoverTrigger>
@@ -126,6 +133,7 @@ const Unit = ({ unit, running }: UnitProps) => {
           justifyContent="start"
           width="100%"
           height="100%"
+          
         >
           <Box
             bgImage={`/assets/character/${character}.svg`}
@@ -136,6 +144,7 @@ const Unit = ({ unit, running }: UnitProps) => {
             width={UNIT_SIZE}
             position="relative"
             fontSize="sm"
+            transform={unit.owner === "P2" ? "scaleX(-1)" : ''}
           >
             <Progress
               width="100px"
@@ -153,9 +162,9 @@ const Unit = ({ unit, running }: UnitProps) => {
                   bgColor: PROGRESS_COLOR.HP,
                 },
               }}
+              zIndex="-5"
+              transform={unit.owner === "P2" ? "scaleX(-1)" : ''}
             />
-
-            {console.log(unit.stats.maxArmorHp, unit.owner)}
 
             <Progress
               width="100px"
@@ -173,6 +182,8 @@ const Unit = ({ unit, running }: UnitProps) => {
                   bgColor: PROGRESS_COLOR.ARMOR,
                 },
               }}
+              zIndex="-5"
+              transform={unit.owner === "P2" ? "scaleX(-1)" : ''}
             />
 
             <Progress
@@ -196,24 +207,30 @@ const Unit = ({ unit, running }: UnitProps) => {
                     }
                   : undefined
               }
+              zIndex="-5"
+              transform={unit.owner === "P2" ? "scaleX(-1)" : ''}
             />
             <Box
               position="absolute"
               top="-27px"
-              left="-5px"
+              left={unit.owner === "P2" ? "95px" : "-5px"}
               fontSize="1.2rem"
               textAlign="left"
+              zIndex="-5"
+              transform={unit.owner === "P2" ? "scaleX(-1)" : ''}
             >
               {unit.stats.armorHp > 0 && unit.stats.maxArmorHp > 0 ? "🛡" : "❤"}
             </Box>
             <Box
               position="absolute"
               top="75px"
-              right="-42px"
+              right={unit.owner === "P2" ? "56px" : "-42px"}
               fontSize="1.2rem"
               textAlign="left"
+              zIndex="-5"
+              transform={unit.owner === "P2" ? "scaleX(-1)" : ''}
             >
-              {unit.currentAction === "move" ? "🏃" : "⚔"}
+              {unit.currentAction === "move" ? "🏃" : unit.stats.atkRange > 1 ? "🏹" : "⚔"}
             </Box>
 
             <Weapon />
@@ -222,6 +239,8 @@ const Unit = ({ unit, running }: UnitProps) => {
             {/* <UnitIcon type={ICON_TYPE.CHEST} /> */}
             {/* <UnitIcon type={ICON_TYPE.ACTION} /> */}
           </Box>
+          
+          <Box position="absolute" />
         </Flex>
       </PopoverTrigger>
 
@@ -229,6 +248,12 @@ const Unit = ({ unit, running }: UnitProps) => {
         <PopoverArrow />
         <PopoverCloseButton />
         <PopoverBody>
+          <Box>
+            Target:{" "}
+            <b>
+              {unit.actionTarget?.col}/{unit.actionTarget?.row}
+            </b>
+          </Box>
           <Box>
             Hp:{" "}
             <b>
@@ -268,6 +293,7 @@ const Unit = ({ unit, running }: UnitProps) => {
         </PopoverBody>
       </PopoverContent>
     </Popover>
+    </>
   );
 };
 

@@ -7,7 +7,7 @@ import {
   SliderFilledTrack,
   SliderThumb,
   SliderTrack,
-  Text,
+  Text
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -21,6 +21,7 @@ const MAX_ROW = 5;
 const Game = () => {
   const router = useRouter();
   const [allHistory, setAllHistory] = useState<{ units: any[] }[]>([]);
+  const [previousStep, setPreviousStep] = useState<{ units: any[] }>();
   const [currentStep, setCurrentStep] = useState<{ units: any[] }>();
   const [stepIndex, setStepIndex] = useState(-1);
 
@@ -50,6 +51,7 @@ const Game = () => {
     setTimeout(() => {
       if (allHistory.length > 0) {
         if (stepIndex + 1 <= allHistory.length - 1) {
+          setPreviousStep(allHistory[stepIndex + 1]);
           setCurrentStep(allHistory[stepIndex + 1]);
           setStepIndex((index) => index + 1);
         } else {
@@ -60,6 +62,7 @@ const Game = () => {
   }, [currentStep, running]);
 
   useEffect(() => {
+    setPreviousStep(allHistory[sliderValue > 0 ? sliderValue - 1 : sliderValue]);
     setCurrentStep(allHistory[sliderValue]);
     setStepIndex(sliderValue);
   }, [sliderValue]);
@@ -111,6 +114,7 @@ const Game = () => {
               }
               aria-label="Open Chat"
               size="sm"
+              zIndex="1000"
             />
           </>
         )}
