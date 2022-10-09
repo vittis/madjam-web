@@ -7,9 +7,9 @@ import {
   PopoverCloseButton,
   PopoverContent,
   PopoverTrigger,
-  Progress,
+  Progress
 } from "@chakra-ui/react";
-import UnitIcon, { ICON_TYPE } from "./unitIcon";
+import Weapon from "./weapon";
 
 enum ARMOR_TYPE {
   LIGHT = "light",
@@ -96,18 +96,20 @@ interface UnitProps {
   running: boolean;
 }
 
-const UNIT_SIZE = "75%";
+const UNIT_SIZE = "60%";
 
 const PROGRESS_COLOR = {
   HP: "#BD0215",
-  ARMOR: "#024ABD",
+  ARMOR: "#c8c8c8",
   ACTION: "#12bd02",
+  BORDER: "#000000",
 };
 
 const Unit = ({ unit, running }: UnitProps) => {
   const hpPercentage = (unit.stats.hp / unit.stats.maxHp) * 100;
 
-  const armorPercentage = (unit.stats.armorHp / unit.stats.maxArmorHp) * 100;
+  const armorPercentage =
+    (unit.stats.armorHp / (unit.stats.maxArmorHp || -1)) * 100;
 
   const progressAP = (unit.stats.ap * 100) / 1000;
 
@@ -121,7 +123,7 @@ const Unit = ({ unit, running }: UnitProps) => {
       <PopoverTrigger>
         <Flex
           alignItems="center"
-          justifyContent="center"
+          justifyContent="start"
           width="100%"
           height="100%"
         >
@@ -136,12 +138,14 @@ const Unit = ({ unit, running }: UnitProps) => {
             fontSize="sm"
           >
             <Progress
-              top="-10px"
+              width="100px"
+              top="-17px"
+              left="10px"
               size="sm"
-              value={hpPercentage < 0 ? 0 : hpPercentage}
+              value={hpPercentage <= 0 ? 0 : hpPercentage}
               //colorScheme="green"
               bgColor="transparent"
-              border="1px solid #FFFFFF"
+              border={`1px solid ${PROGRESS_COLOR.BORDER}`}
               borderRadius="4px"
               sx={{
                 "div[role='progressbar']": {
@@ -150,13 +154,18 @@ const Unit = ({ unit, running }: UnitProps) => {
                 },
               }}
             />
+
+            {console.log(unit.stats.maxArmorHp, unit.owner)}
+
             <Progress
-              top="-18px"
+              width="100px"
+              top="-25px"
+              left="10px"
               size="sm"
-              value={armorPercentage < 0 ? 0 : armorPercentage}
+              value={armorPercentage <= 0 ? 0 : armorPercentage}
               //colorScheme="gray"
               bgColor="transparent"
-              border="1px solid #FFFFFF"
+              border={`1px solid ${PROGRESS_COLOR.BORDER}`}
               borderRadius="4px"
               sx={{
                 "div[role='progressbar']": {
@@ -165,18 +174,17 @@ const Unit = ({ unit, running }: UnitProps) => {
                 },
               }}
             />
+
             <Progress
-              top="25%"
-              left="60%"
+              width="100px"
+              bottom="-71px"
+              left="6px"
               size="sm"
               value={progressAP}
-              /* colorScheme={
-                                unit.currentAction === "move" ? "twitter" : "red"
-                            } */
-              colorScheme="karpov"
+              colorScheme={unit.currentAction === "move" ? "karpov" : "markov"}
+              /* colorScheme="karpov" */
               bgColor="transparent"
-              transform="rotate(-90deg)"
-              border="1px solid #FFFFFF"
+              border={`1px solid ${PROGRESS_COLOR.BORDER}`}
               borderRadius="4px"
               sx={
                 progressAP > apTransitionThreshold && running
@@ -189,9 +197,29 @@ const Unit = ({ unit, running }: UnitProps) => {
                   : undefined
               }
             />
+            <Box
+              position="absolute"
+              top="-27px"
+              left="-5px"
+              fontSize="1.2rem"
+              textAlign="left"
+            >
+              {unit.stats.armorHp > 0 && unit.stats.maxArmorHp > 0 ? "🛡" : "❤"}
+            </Box>
+            <Box
+              position="absolute"
+              top="75px"
+              right="-42px"
+              fontSize="1.2rem"
+              textAlign="left"
+            >
+              {unit.currentAction === "move" ? "🏃" : "⚔"}
+            </Box>
 
-            <UnitIcon type={ICON_TYPE.WEAPON} />
-            <UnitIcon type={ICON_TYPE.CHEST} />
+            <Weapon />
+
+            {/* <UnitIcon type={ICON_TYPE.WEAPON} /> */}
+            {/* <UnitIcon type={ICON_TYPE.CHEST} /> */}
             {/* <UnitIcon type={ICON_TYPE.ACTION} /> */}
           </Box>
         </Flex>
@@ -201,6 +229,18 @@ const Unit = ({ unit, running }: UnitProps) => {
         <PopoverArrow />
         <PopoverCloseButton />
         <PopoverBody>
+          <Box>
+            Hp:{" "}
+            <b>
+              {unit.stats.hp}/{unit.stats.maxHp}
+            </b>
+          </Box>
+          <Box>
+            Armor:{" "}
+            <b>
+              {unit.stats.armorHp}/{unit.stats.maxArmorHp}
+            </b>
+          </Box>
           <Box>
             Str: <b>{unit.stats.str}</b>
           </Box>
