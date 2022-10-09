@@ -18,7 +18,6 @@ const MAX_ROW = 5;
 const Game = () => {
   const router = useRouter();
   const [allHistory, setAllHistory] = useState<{ units: any[] }[]>([]);
-  const [previousStep, setPreviousStep] = useState<{ units: any[] }>();
   const [currentStep, setCurrentStep] = useState<{ units: any[] }>();
   const [stepIndex, setStepIndex] = useState(-1);
 
@@ -27,12 +26,20 @@ const Game = () => {
   const [running, setRunning] = useState(false);
 
   const [winner, setWinner] = useState("");
+  const [animal, setMyAnimal] = useState("frog");
+  const [team, setMyTeam] = useState("");
+  const [players, setPlayers] = useState();
 
   useEffect(() => {
     gameRoom.send("askHistory", {});
 
     gameRoom.onMessage("sendHistory", (message) => {
       if (!running && message.history) {
+        setPlayers(message.players);
+        console.log("set my animal ", message.myAnimal);
+        setMyAnimal(message.myAnimal);
+        console.log("set my team ", message.myTeam);
+        setMyTeam(message.myTeam);
         setWinner(message.winner);
         setRunning(true);
         setAllHistory(message.history);
@@ -49,7 +56,6 @@ const Game = () => {
     setTimeout(() => {
       if (allHistory.length > 0) {
         if (stepIndex + 1 <= allHistory.length - 1) {
-          setPreviousStep(allHistory[stepIndex + 1]);
           setCurrentStep(allHistory[stepIndex + 1]);
           setStepIndex((index) => index + 1);
         } else {
@@ -60,9 +66,6 @@ const Game = () => {
   }, [currentStep, running]);
 
   useEffect(() => {
-    setPreviousStep(
-      allHistory[sliderValue > 0 ? sliderValue - 1 : sliderValue]
-    );
     setCurrentStep(allHistory[sliderValue]);
     setStepIndex(sliderValue);
   }, [sliderValue]);
@@ -104,24 +107,21 @@ const Game = () => {
               (unit) => unit.row === row && unit.col === col
             );
 
-            return <Tile col={col} row={row} unit={unit} running={running} />;
+            return (
+              <Tile
+                // @ts-ignore
+                animal={animal}
+                team={team}
+                col={col}
+                row={row}
+                unit={unit}
+                running={running}
+                players={players}
+              />
+            );
           })}
         </SimpleGrid>
       </Flex>
-
-      {/* hp ❤
-        movement 🏃‍♂️
-        attack ⚔ */}
-
-      {/* history && history.units.map() */}
-
-      {/* <Button
-        onClick={() => {
-          client?.action("startGame", { id: gameId }, (response) => {});
-        }}
-      >
-        READY
-      </Button> */}
     </>
   );
 };

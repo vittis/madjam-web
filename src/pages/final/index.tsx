@@ -52,7 +52,7 @@ export default function Final() {
           size="lg"
           marginBottom={10}
         >
-          Meua migo... vocÊ é o cara.... o guerreio mais poderoso dessas
+          Meua migo... Você é o cara.... O guerreiro mais poderoso dessas
           galáxias. Você utilizou as melhores possibilidades e fez poesia em meu
           coração. Te concedo agora um desejo... Escolha sabiamente.
         </Heading>
