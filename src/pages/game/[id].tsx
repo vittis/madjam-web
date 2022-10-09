@@ -7,7 +7,7 @@ import {
   SliderFilledTrack,
   SliderThumb,
   SliderTrack,
-  Text
+  Text,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -16,7 +16,7 @@ import { BsFillPauseFill, BsFillPlayFill } from "react-icons/bs";
 import { gameRoom } from "..";
 import Tile from "../../components/Game/tile";
 
-const MAX_COL = 7;
+const MAX_COL = 8;
 const MAX_ROW = 5;
 
 const Game = () => {
@@ -63,7 +63,9 @@ const Game = () => {
   }, [currentStep, running]);
 
   useEffect(() => {
-    setPreviousStep(allHistory[sliderValue > 0 ? sliderValue - 1 : sliderValue]);
+    setPreviousStep(
+      allHistory[sliderValue > 0 ? sliderValue - 1 : sliderValue]
+    );
     setCurrentStep(allHistory[sliderValue]);
     setStepIndex(sliderValue);
   }, [sliderValue]);
@@ -121,11 +123,7 @@ const Game = () => {
         )}
       </Flex>
 
-      <ReactAudioPlayer
-        src="/audio/game.mp3"
-        autoPlay
-        loop
-      />
+      <ReactAudioPlayer src="/audio/game.mp3" autoPlay loop />
 
       <Flex alignItems="center" justifyContent="center">
         <SimpleGrid
