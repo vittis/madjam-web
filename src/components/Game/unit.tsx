@@ -7,7 +7,7 @@ import {
   PopoverCloseButton,
   PopoverContent,
   PopoverTrigger,
-  Progress
+  Progress,
 } from "@chakra-ui/react";
 import Weapon from "./weapon";
 

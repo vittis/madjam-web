@@ -7,7 +7,7 @@ import {
   SliderFilledTrack,
   SliderThumb,
   SliderTrack,
-  Text
+  Text,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
