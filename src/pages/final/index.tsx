@@ -4,7 +4,7 @@ import {
   Heading,
   Modal,
   ModalContent,
-  ModalOverlay,
+  ModalOverlay
 } from "@chakra-ui/react";
 import Image from "next/image";
 import { useState } from "react";
@@ -56,6 +56,9 @@ export default function Final() {
           galáxias. Você utilizou as melhores possibilidades e fez poesia em meu
           coração. Te concedo agora um desejo... Escolha sabiamente.
         </Heading>
+
+        <ReactAudioPlayer src="/audio/timEncounter.mp3" autoPlay loop />
+
         {options.map((option) => (
           <Button
             color="black"

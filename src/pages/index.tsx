@@ -18,6 +18,7 @@ import * as Colyseus from "colyseus.js";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
+import ReactAudioPlayer from "react-audio-player";
 
 // ...
 
@@ -232,6 +233,9 @@ const Home: NextPage = () => {
           </form>
         </ModalContent>
       </Modal>
+
+      <ReactAudioPlayer src="/audio/selectMenu.mp3" autoPlay loop />
+
       {!isModalOpen && (
         <Container centerContent>
           <Heading textShadow="0px 0px 10px #bb0e98df" mt={8} mb={5} size="2xl">
