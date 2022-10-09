@@ -87,7 +87,7 @@ export default function Setup() {
     });
 
     gameRoom.onMessage("startGame", (message) => {
-      router.push(`/game/bismani`);
+      router.push(`/game`);
     });
   }, []);
 

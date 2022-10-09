@@ -12,7 +12,7 @@ import {
   ModalOverlay,
   ToastId,
   useToast,
-  WrapItem
+  WrapItem,
 } from "@chakra-ui/react";
 import * as Colyseus from "colyseus.js";
 import type { NextPage } from "next";
@@ -21,7 +21,7 @@ import { useEffect, useRef, useState } from "react";
 
 // ...
 
-let client = new Colyseus.Client("ws://localhost:2567");
+let client = new Colyseus.Client("wss://madjam-server.onrender.com:10000");
 
 export let gameRoom: Colyseus.Room;
 
