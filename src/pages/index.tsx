@@ -126,7 +126,7 @@ const Home: NextPage = () => {
     if (localStorage.getItem("name")) {
       setIsIntroModalOpen(false);
       setName(localStorage.getItem("name"));
-      lobbyRoom.current?.send("setName", { name });
+      lobbyRoom?.send("setName", { name });
     }
   }, []);
   const isOnMatchmaking = !!lobbyMembers
