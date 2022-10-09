@@ -31,7 +31,7 @@ function guidGenerator() {
 
 export default function Setup() {
   const router = useRouter();
-  const [gold, setGold] = useState(5000);
+  const [gold, setGold] = useState(4000);
 
   const [cards, setCards] = useState<CardProps[]>([]);
   const [weapons, setWeapons] = useState<any[]>([]);
@@ -114,8 +114,7 @@ export default function Setup() {
   };
 
   const confirmDisabled =
-    !!cards.every((c) => !!c.background && !!c.armor && c.helmet && c.weapon) &&
-    cards.length !== 0;
+    !!cards.every((c) => !!c.background && !!c.weapon) && cards.length !== 0;
   const canAddChar = gold > 430;
 
   const [confirmed, setConfirmed] = useState(false);
