@@ -2,6 +2,7 @@ import {
   Box, Button, Heading
 } from "@chakra-ui/react";
 import Image from "next/image";
+import ReactAudioPlayer from "react-audio-player";
 
 const MINITIM_SIZE = "300px"
 
@@ -27,6 +28,9 @@ export default function Final() {
 Você utilizou as melhores possibilidades e fez poesia em meu coração.
 Te concedo agora um desejo... escolha sabiamente.
         </Heading>
+
+        <ReactAudioPlayer src="/audio/timEncounter.mp3" autoPlay loop />
+
         {options.map((option) => (
           <Button
           color="black"
