@@ -12,7 +12,7 @@ import {
   ModalOverlay,
   ToastId,
   useToast,
-  WrapItem,
+  WrapItem
 } from "@chakra-ui/react";
 import * as Colyseus from "colyseus.js";
 import type { NextPage } from "next";
@@ -65,7 +65,7 @@ const Home: NextPage = () => {
           console.log({ rooms });
         });
 
-        room.onMessage("onStartSetup", async (data) => {
+        /* room.onMessage("onStartSetup", async (data) => {
           console.log({ data });
           console.log("onStartSetup");
           console.log(lobbyMembers);
@@ -81,9 +81,9 @@ const Home: NextPage = () => {
             // router.push(`/game/kkkmasein`);
             router.push(`/setup`);
           });
-        });
+        }); */
 
-        /* room.onMessage("onStartGame", async (data) => {
+        room.onMessage("onStartGame", async (data) => {
           console.log({ data });
           console.log("onStartGame");
           console.log(lobbyMembers);
@@ -98,7 +98,7 @@ const Home: NextPage = () => {
             console.log("REDIRECT START GAME PLS");
             router.push(`/game/kkkmasein`);
           });
-        }); */
+        });
 
         room.onStateChange((state) => {
           const members: any[] = [];

@@ -32,7 +32,7 @@ const UnitIcon = ({ type }: IconProps) => {
     ACTION: '0%'
   }
 
-  const itemName = type === ICON_TYPE.WEAPON ? 'sword' : 'basicArmor'
+  const itemName = type === ICON_TYPE.WEAPON ? 'lightsaber' : 'basicArmor'
 
   return (
     <Box //bg="#DB1DE0"
