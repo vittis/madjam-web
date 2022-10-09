@@ -4,7 +4,7 @@ import {
   Modal,
   ModalContent,
   ModalOverlay,
-  SimpleGrid,
+  SimpleGrid
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -89,7 +89,8 @@ const Game = () => {
           </Button>
         </ModalContent>
       </Modal>
-      <ReactAudioPlayer src="/audio/game.mp3" autoPlay loop />
+      
+      <ReactAudioPlayer src="/audio/fighting.mp3" autoPlay loop />
 
       <Flex alignItems="center" justifyContent="center" mt={4}>
         <SimpleGrid
