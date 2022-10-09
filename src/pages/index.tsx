@@ -47,7 +47,8 @@ const Home: NextPage = () => {
   //console.log("RENDER HOME");
   const router = useRouter();
 
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [introModalOpen, setIsIntroModalOpen] = useState(true);
   const [name, setName] = useState("");
   const [lobbyMembers, setLobbyMembers] = useState<any[]>([]);
 
@@ -123,12 +124,56 @@ const Home: NextPage = () => {
     join();
   }, []);
 
+  useEffect(() => {
+    if (localStorage.getItem("name")) {
+      setIsIntroModalOpen(false);
+      setName(localStorage.getItem("name"));
+      lobbyRoom.current?.send("setName", { name });
+    }
+  }, []);
   const isOnMatchmaking = !!lobbyMembers
     .filter((m) => !!m.isMatchmaking)
     .find((m) => m.id === lobbyRoom.current?.sessionId);
 
   return (
     <>
+      <Modal
+        onClose={() => {}}
+        closeOnOverlayClick={false}
+        isOpen={introModalOpen}
+        isCentered
+        size="3xl"
+      >
+        <ModalOverlay />
+        <ModalContent padding={4}>
+          <Box className="typewrite">
+            <Box as="p">
+              Em uma galáxia extremamente distante, espécies que fugiram do
+            </Box>
+            <Box as="p">
+              planeta terra lutam entre si para conquistar apenas uma coisa:
+            </Box>
+            <Box as="p">
+              Um desejo concedido pelo grande,{" "}
+              <Box as="span" color="pink.300" fontWeight="bold">
+                Mini Tim.
+              </Box>
+            </Box>
+            <Box as="p">
+              A última raça irá prevalecer e conquistar um desejo...
+            </Box>
+            <Button
+              colorScheme="green"
+              onClick={() => {
+                setIsIntroModalOpen(false);
+                setIsModalOpen(true);
+              }}
+            >
+              Entrar no campo de Batalha
+            </Button>
+          </Box>
+        </ModalContent>
+      </Modal>
       <Modal
         onClose={() => {}}
         closeOnOverlayClick={false}
@@ -150,7 +195,11 @@ const Home: NextPage = () => {
             onSubmit={(e) => {
               e.preventDefault();
               lobbyRoom.current?.send("setName", { name });
+              let hasName = localStorage.getItem("name");
               setIsModalOpen(false);
+              if (!hasName) {
+                localStorage.setItem("name", name);
+              }
               /* client?.action("setName", { name }, (data: any) => {
                 console.log({ data });
                 if (data.ok) {
