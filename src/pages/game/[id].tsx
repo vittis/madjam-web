@@ -1,18 +1,7 @@
-import { ChevronLeftIcon, Icon } from "@chakra-ui/icons";
-import {
-  Flex,
-  IconButton,
-  SimpleGrid,
-  Slider,
-  SliderFilledTrack,
-  SliderThumb,
-  SliderTrack,
-  Text,
-} from "@chakra-ui/react";
+import { Flex, SimpleGrid } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import ReactAudioPlayer from "react-audio-player";
-import { BsFillPauseFill, BsFillPlayFill } from "react-icons/bs";
 import { gameRoom } from "..";
 import Tile from "../../components/Game/tile";
 
@@ -30,6 +19,9 @@ const Game = () => {
 
   const [running, setRunning] = useState(false);
 
+  const [winner, setWinner] = useState("");
+  console.log({ winner });
+
   useEffect(() => {
     gameRoom.send("askHistory", {});
 
@@ -37,6 +29,7 @@ const Game = () => {
       console.log("CHEGOOO");
       console.log(message.history);
       if (!running && message.history) {
+        setWinner(message.winner);
         setRunning(true);
         setAllHistory(message.history);
         setStepIndex(0);
@@ -72,60 +65,9 @@ const Game = () => {
 
   return (
     <>
-      <Flex alignItems="center" gap={4}>
-        <IconButton
-          onClick={router.back}
-          rounded="full"
-          icon={<ChevronLeftIcon />}
-          aria-label="Open Chat"
-          size="sm"
-        />
-
-        <Text as="h3">Game Time</Text>
-
-        {allHistory && (
-          <>
-            <Slider
-              onChange={(value) => {
-                setSliderValue(value);
-                setRunning(false);
-              }}
-              value={stepIndex}
-              defaultValue={0}
-              width="400px"
-              aria-label="slider-ex-1 min={0} max={300} step={30}"
-              min={0}
-              max={allHistory.length - 1}
-              step={1}
-            >
-              <SliderTrack>
-                <SliderFilledTrack />
-              </SliderTrack>
-              <SliderThumb />
-            </Slider>
-
-            <IconButton
-              onClick={() => {
-                setRunning(!running);
-              }}
-              icon={
-                !running ? (
-                  <Icon as={BsFillPlayFill} />
-                ) : (
-                  <Icon as={BsFillPauseFill} />
-                )
-              }
-              aria-label="Open Chat"
-              size="sm"
-              zIndex="1000"
-            />
-          </>
-        )}
-      </Flex>
-
       <ReactAudioPlayer src="/audio/game.mp3" autoPlay loop />
 
-      <Flex alignItems="center" justifyContent="center">
+      <Flex alignItems="center" justifyContent="center" mt={4}>
         <SimpleGrid
           columns={MAX_COL}
           spacingX="20px"

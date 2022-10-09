@@ -49,7 +49,7 @@ const Home: NextPage = () => {
   //console.log("RENDER HOME");
   const router = useRouter();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(true);
   const [introModalOpen, setIsIntroModalOpen] = useState(true);
   const [name, setName] = useState("");
   const [lobbyMembers, setLobbyMembers] = useState<any[]>([]);
@@ -125,10 +125,9 @@ const Home: NextPage = () => {
   useEffect(() => {
     if (localStorage.getItem("name")) {
       setIsIntroModalOpen(false);
-      setName(localStorage.getItem("name"));
-      lobbyRoom?.send("setName", { name });
     }
   }, []);
+
   const isOnMatchmaking = !!lobbyMembers
     .filter((m) => !!m.isMatchmaking)
     .find((m) => m.id === lobbyRoom?.sessionId);
@@ -152,7 +151,7 @@ const Home: NextPage = () => {
               planeta terra lutam entre si para conquistar apenas uma coisa:
             </Box>
             <Box as="p">
-              Um desejo concedido pelo grande,{" "}
+              Um desejo concedido pelo grande{" "}
               <Box as="span" color="pink.300" fontWeight="bold">
                 Mini Tim.
               </Box>

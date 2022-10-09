@@ -93,7 +93,7 @@ export default function Setup() {
 
     gameRoom.onMessage("startGame", (message) => {
       console.log("STARTA O JOGO AE");
-      router.push(`/game/kkkmasein`);
+      router.push(`/game/bismani`);
     });
   }, []);
 
