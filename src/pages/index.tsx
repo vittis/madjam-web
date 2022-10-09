@@ -22,7 +22,7 @@ import ReactAudioPlayer from "react-audio-player";
 
 // ...
 
-let client = new Colyseus.Client("wss://madjam-server.onrender.com:10000");
+let client = new Colyseus.Client("wss://madjam-server.onrender.com/");
 
 export let gameRoom: Colyseus.Room;
 

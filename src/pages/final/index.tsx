@@ -4,10 +4,11 @@ import {
   Heading,
   Modal,
   ModalContent,
-  ModalOverlay
+  ModalOverlay,
 } from "@chakra-ui/react";
 import Image from "next/image";
 import { useState } from "react";
+import ReactAudioPlayer from "react-audio-player";
 
 const MINITIM_SIZE = "300px";
 
