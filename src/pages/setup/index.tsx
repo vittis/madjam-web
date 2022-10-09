@@ -9,11 +9,12 @@ import {
   ModalOverlay,
   ScaleFade,
   Text,
-  Wrap,
+  Wrap
 } from "@chakra-ui/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
+import ReactAudioPlayer from "react-audio-player";
 import { gameRoom } from "..";
 import Card, { CardProps } from "../../components/Card/card";
 import Armor from "../../components/Products/Armor";
@@ -119,9 +120,8 @@ export default function Setup() {
     setGold(Math.max(0, gold - price));
   };
 
-  const confirmDisabled =
-    !!cards.every((c) => !!c.background && !!c.armor && c.helmet && c.weapon) &&
-    cards.length !== 0;
+  const confirmDisabled = !!cards.every((c) => !!c.background && !!c.armor && c.helmet && c.weapon) && cards.length !== 0;
+  const canAddChar = gold > 430;
 
   const [confirmed, setConfirmed] = useState(false);
   const onClickConfirm = () => {
@@ -164,6 +164,8 @@ export default function Setup() {
           >
             Comandante, use seus recursos para recrutar tropas.{" "}
           </Heading>
+
+          <ReactAudioPlayer src="/audio/selectMenu.mp3" autoPlay loop />
 
           <Flex alignItems="center" gap={3}>
             <Box
@@ -475,6 +477,7 @@ export default function Setup() {
                 colorScheme="pink"
                 backgroundColor="pink"
                 paddingBottom={2}
+                disabled={!canAddChar}
                 onClick={addCard}
               >
                 +
