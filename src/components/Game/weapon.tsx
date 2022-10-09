@@ -27,11 +27,9 @@ interface WeaponProps {
   mainHandWeapon: WeaponData;
 }
 
-const Weapon = ({mainHandWeapon}: WeaponProps) => {
+const Weapon = ({ mainHandWeapon }: WeaponProps) => {
   const top = "-15px";
   const left = "70%";
-
-  console.log('mainHandWeapon', mainHandWeapon)
 
   return (
     <Box
@@ -44,7 +42,7 @@ const Weapon = ({mainHandWeapon}: WeaponProps) => {
       zIndex="-5"
     >
       <Image
-      /* @ts-ignore */
+        /* @ts-ignore */
         src={assetMap[mainHandWeapon.name]}
         width={IMG_SIZE}
         height={IMG_SIZE}

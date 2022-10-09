@@ -1,4 +1,11 @@
-import { Flex, SimpleGrid } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  Modal,
+  ModalContent,
+  ModalOverlay,
+  SimpleGrid,
+} from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import ReactAudioPlayer from "react-audio-player";
@@ -20,14 +27,11 @@ const Game = () => {
   const [running, setRunning] = useState(false);
 
   const [winner, setWinner] = useState("");
-  console.log({ winner });
 
   useEffect(() => {
     gameRoom.send("askHistory", {});
 
     gameRoom.onMessage("sendHistory", (message) => {
-      console.log("CHEGOOO");
-      console.log(message.history);
       if (!running && message.history) {
         setWinner(message.winner);
         setRunning(true);
@@ -63,8 +67,25 @@ const Game = () => {
     setStepIndex(sliderValue);
   }, [sliderValue]);
 
+  const gameFinished = stepIndex === allHistory.length - 1;
+
   return (
     <>
+      <Modal
+        onClose={() => {}}
+        closeOnOverlayClick={false}
+        isOpen={gameFinished}
+        isCentered
+        size="sm"
+      >
+        <ModalOverlay />
+        <ModalContent textAlign="center" p={20} fontSize="2xl">
+          Fim do jogo! GG 👏
+          <Button mt={"16px"} onClick={() => router.push("/final")}>
+            Ver cena final 👉
+          </Button>
+        </ModalContent>
+      </Modal>
       <ReactAudioPlayer src="/audio/game.mp3" autoPlay loop />
 
       <Flex alignItems="center" justifyContent="center" mt={4}>

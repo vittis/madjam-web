@@ -32,16 +32,7 @@ export default function Setup() {
   const router = useRouter();
   const [gold, setGold] = useState(5000);
 
-  const [cards, setCards] = useState<CardProps[]>([
-    {
-      avatar: "frog",
-      background: undefined,
-      helmet: undefined,
-      armor: undefined,
-      weapon: undefined,
-      id: guidGenerator(),
-    },
-  ]);
+  const [cards, setCards] = useState<CardProps[]>([]);
   const [weapons, setWeapons] = useState<any[]>([]);
   const [helmets, setHelmets] = useState<any[]>([]);
   const [chests, setChests] = useState<any[]>([]);
@@ -51,10 +42,11 @@ export default function Setup() {
   const hasSelection = !!selected;
 
   const [isRulesModalOpen, setIsRulesModalOpen] = useState<boolean>(false);
+  const [myAnimal, setMyanimal] = useState("frog");
 
   const addCard = () => {
     const cardTemplate = {
-      avatar: "frog",
+      avatar: myAnimal,
       background: undefined,
       helmet: undefined,
       armor: undefined,
@@ -81,9 +73,11 @@ export default function Setup() {
   useEffect(() => {
     gameRoom.send("askData", {});
 
-    gameRoom.onMessage("sendData", ({ data }) => {
+    gameRoom.onMessage("sendData", ({ data, myAnimal }) => {
       console.log("chegou data");
       console.log({ data });
+      console.log({ myAnimal });
+      setMyanimal(myAnimal?.toLowerCase() || "frog");
 
       setWeapons(Object.values(data.weapons));
       setHelmets(Object.values(data.heads));
@@ -92,7 +86,6 @@ export default function Setup() {
     });
 
     gameRoom.onMessage("startGame", (message) => {
-      console.log("STARTA O JOGO AE");
       router.push(`/game/bismani`);
     });
   }, []);
@@ -140,7 +133,7 @@ export default function Setup() {
       >
         <ModalOverlay />
         <ModalContent p={20} fontSize="2xl">
-          Esperando o oponente...
+          Esperando o oponente... 😴
         </ModalContent>
       </Modal>
       <Box
@@ -439,7 +432,7 @@ export default function Setup() {
                         }
 
                         const cardTemplate = {
-                          avatar: "frog",
+                          avatar: myAnimal,
                           background: undefined,
                           helmet: undefined,
                           armor: undefined,
