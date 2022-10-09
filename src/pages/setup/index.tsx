@@ -2,47 +2,63 @@ import {
   Box,
   Button,
   Divider,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverHeader,
-  PopoverTrigger,
-  SimpleGrid,
+  Flex,
+  Heading,
+  ScaleFade,
+  Wrap,
 } from "@chakra-ui/react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { gameRoom } from "..";
-import { assetMap } from "../../components/assetMap";
 import Card, { CardProps } from "../../components/Card/card";
+import Armor from "../../components/Products/Armor";
+import Background from "../../components/Products/Background";
+import Weapon from "../../components/Products/Weapon";
 
-const card1 = {
-  avatar: "rat",
-  background: "noble",
-  helmet: "paper",
-  armor: "leather",
-  weapon: "sword",
-};
+function guidGenerator() {
+  var S4 = function () {
+    return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+  };
+  // eslint-disable-next-line prettier/prettier
+  return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+}
 
 export default function Setup() {
-  const [cards, setCards] = useState<CardProps[]>([]);
+  const [gold, setGold] = useState(5000);
+
+  const [cards, setCards] = useState<CardProps[]>([
+    {
+      avatar: "frog",
+      background: undefined,
+      helmet: undefined,
+      armor: undefined,
+      weapon: undefined,
+      id: guidGenerator(),
+    },
+  ]);
   const [weapons, setWeapons] = useState<any[]>([]);
   const [helmets, setHelmets] = useState<any[]>([]);
   const [chests, setChests] = useState<any[]>([]);
   const [backgrounds, setBackgrounds] = useState<any[]>([]);
 
+  const [selected, setSelected] = useState<any>(false);
+  const hasSelection = !!selected;
+
   const addCard = () => {
-    const newCard = { ...card1, index: cards.length };
+    const cardTemplate = {
+      avatar: "frog",
+      background: undefined,
+      helmet: undefined,
+      armor: undefined,
+      weapon: undefined,
+      id: guidGenerator(),
+    };
+    const newCard = { ...cardTemplate };
     setCards([...cards, newCard]);
   };
 
-  const removeCard = (index: number) => {
-    const newCards = cards.map((card, index) => ({
-      ...card,
-      index: index,
-    }));
-    setCards(newCards.filter((element) => element.index !== index));
+  const removeCard = (id: string) => {
+    setCards(cards.filter((element) => element.id !== id));
   };
 
   useEffect(() => {
@@ -59,48 +75,142 @@ export default function Setup() {
     });
   }, []);
 
+  const onSelect = (equip: any) => {
+    setSelected(equip);
+  };
+
+  const finalSquad = useMemo(() => {
+    return cards
+      .filter((c) => !!c.background)
+      .map((card) => ({
+        from: gameRoom.sessionId,
+        background: card.background,
+        weapon: card.weapon,
+        armor: card.armor,
+        helmet: card.helmet,
+      }));
+  }, [cards]);
+
+  console.log({ finalSquad });
+
+  const onBuy = (price: number) => {
+    setGold(Math.max(0, gold - price));
+  };
+
   return (
-    <Box display="flex" flexDirection="column" alignItems="center">
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      maxWidth="1700px"
+      margin="0 auto"
+    >
+      <Box display="flex" justifyContent="center" alignItems="center" gap={100}>
+        <Heading
+          maxWidth="600px"
+          textShadow="3px 3px 10px #bb0e98df"
+          mt={12}
+          size="lg"
+        >
+          Comandante, use seus recursos para recrutar tropas.
+        </Heading>
+
+        <Flex alignItems="center" gap={3}>
+          <Box
+            marginRight={2}
+            textColor="#F9E006"
+            fontWeight="bold"
+            fontSize="6xl"
+            textShadow="0px 0px 3px #F9E006"
+          >
+            {gold}
+          </Box>
+          <Image
+            alt="icon"
+            src="/assets/other/coins.svg"
+            height="100px"
+            width="100px"
+          />
+        </Flex>
+      </Box>
       <Box
         display="flex"
         justifyContent="center"
         alignItems="center"
         gap={4}
-        marginTop={20}
+        marginTop={14}
         width="80%"
-        height="280px"
+        height="268px"
       >
-        {cards.map((card, index) => (
-          <Card
-            key={index}
-            index={index}
-            avatar={card.avatar}
-            background={card.background}
-            helmet={card.helmet}
-            weapon={card.weapon}
-            armor={card.armor}
-            removeCard={removeCard}
-          />
+        {cards.map((card) => (
+          <ScaleFade key={card.id} initialScale={0.2} in={true}>
+            <Card
+              id={card.id}
+              avatar={card.avatar}
+              background={card.background}
+              helmet={card.helmet}
+              weapon={card.weapon}
+              armor={card.armor}
+              removeCard={removeCard}
+              hasSelection={hasSelection}
+              onEquip={() => {
+                if (selected) {
+                  onBuy(selected.price);
+                  setCards(
+                    cards.map((c) => {
+                      if (card.id !== c.id) {
+                        return c;
+                      }
+
+                      if (selected.type === "CHEST") {
+                        return { ...c, armor: selected.name };
+                      }
+                      if (selected.type === "HEAD") {
+                        return { ...c, helmet: selected.name };
+                      }
+                      if (selected.type === "weapon") {
+                        return { ...c, weapon: selected.name };
+                      }
+                      if (selected.type === "background") {
+                        return { ...c, background: selected.name };
+                      }
+
+                      const cardTemplate = {
+                        avatar: "frog",
+                        background: undefined,
+                        helmet: undefined,
+                        armor: undefined,
+                        weapon: undefined,
+                        id: guidGenerator(),
+                      };
+
+                      return cardTemplate;
+                    })
+                  );
+                  setSelected(undefined);
+                }
+              }}
+            />
+          </ScaleFade>
         ))}
 
         {cards.length <= 4 && (
           <Box
             width={220}
             height="100%"
-            border="solid 3px #3389AD"
             display="flex"
             justifyContent="center"
             alignItems="center"
             borderRadius={8}
-            _hover={{ boxShadow: "outline" }}
             boxShadow="2xl"
           >
             <Button
-              width="80px"
-              height="80px"
+              width="68px"
+              height="68px"
               borderRadius="50%"
               fontSize="48px"
-              backgroundColor="green"
+              colorScheme="pink"
+              backgroundColor="pink"
               paddingBottom={2}
               onClick={addCard}
             >
@@ -109,6 +219,13 @@ export default function Setup() {
           </Box>
         )}
       </Box>
+
+      <Heading textShadow="0px 0px 4px #bb0e98df" size="md" mt={10}>
+        {!hasSelection
+          ? "Escolha algum recurso abaixo 👇"
+          : "Escolha um recruta para equipar ☝"}
+      </Heading>
+
       <Box
         marginTop={8}
         width="100%"
@@ -116,375 +233,83 @@ export default function Setup() {
         justifyContent="space-around"
       >
         <Box>
-          <Box fontSize={32}>👨‍🌾 Profissão</Box>
+          <Box textShadow="0px 0px 3px #bb0e98df" fontSize={32}>
+            🐱‍🚀 Tropas
+          </Box>
           <Divider height={2}></Divider>
-          <SimpleGrid columns={5} spacing={2} width="100%" marginTop={4}>
-            {backgrounds.map((background) => (
-              <Popover key={background.name}>
-                {/* @ts-ignore */}
-                <PopoverTrigger>
-                  <Box
-                    width="60px"
-                    height="60px"
-                    cursor="pointer"
-                    backgroundColor="rgba(174, 174, 174, .67)"
-                    border="solid 2px #3389AD"
-                    borderRadius="5px"
-                    display="flex"
-                    justifyContent="center"
-                  >
-                    <Image
-                      alt="icon"
-                      src={
-                        /* @ts-ignore */
-                        assetMap[background.name] ||
-                        "/assets/character/frog.svg"
-                      }
-                      height="60px"
-                      width="60px"
-                    />
-                  </Box>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <PopoverArrow />
-                  <PopoverCloseButton />
-                  <PopoverHeader display="flex" justifyContent="space-between">
-                    <Box fontSize="2xl">
-                      <b>{background.name}</b>
-                    </Box>
-                    <Box paddingRight={6} display="flex" alignItems="center">
-                      <Box
-                        marginRight={2}
-                        textColor="#F9E006"
-                        fontWeight="bold"
-                        fontSize="2xl"
-                      >
-                        50
-                      </Box>
-                      <Image
-                        alt="icon"
-                        src="/assets/other/coins.svg"
-                        height="30px"
-                        width="30px"
-                      />
-                    </Box>
-                  </PopoverHeader>
-                  <PopoverBody>
-                    <Box>
-                      🩸 HP : <b>{background.hp}</b>
-                    </Box>
-
-                    <Box>
-                      🍃 Agilidade: <b>{background.quickness}%</b>
-                    </Box>
-                    <Box>
-                      🏋️‍♂️ Força:{" "}
-                      <b>
-                        {background.str >= 0 ? "+" : "-"}
-                        {background.str}
-                      </b>
-                    </Box>
-                    <Box>
-                      🤺 Destreza:{" "}
-                      <b>
-                        {background.dex >= 0 ? "+" : ""}
-                        {background.dex}
-                      </b>
-                    </Box>
-
-                    <Button
-                      display="flex"
-                      marginTop={2}
-                      backgroundColor="green"
-                      width="100%"
-                    >
-                      Comprar e Equipar
-                    </Button>
-                  </PopoverBody>
-                </PopoverContent>
-              </Popover>
-            ))}
-          </SimpleGrid>
+          <Wrap spacing={2} width="100%" marginTop={4} maxWidth="300px">
+            {backgrounds
+              .sort((a, b) => a.price - b.price)
+              .map((background) => (
+                <Background
+                  key={background.name}
+                  background={background}
+                  onSelect={onSelect}
+                  gold={gold}
+                  onBuy={onBuy}
+                />
+              ))}
+          </Wrap>
         </Box>
-        <Box>
-          <Box fontSize={32}>⚔ Armas</Box>
-          <Divider height={2}></Divider>
-          <SimpleGrid columns={5} spacing={2} width="100%" marginTop={4}>
-            {weapons.map((weapon) => (
-              <Popover key={weapon.name}>
-                {/* @ts-ignore */}
-                <PopoverTrigger>
-                  <Box
-                    width="60px"
-                    height="60px"
-                    cursor="pointer"
-                    backgroundColor="rgba(174, 174, 174, .67)"
-                    border="solid 2px #3389AD"
-                    borderRadius="5px"
-                    display="flex"
-                    justifyContent="center"
-                  >
-                    <Image
-                      alt="icon"
-                      src={
-                        /* @ts-ignore */
-                        assetMap[weapon.name] || "/assets/character/frog.svg"
-                      }
-                      height="60px"
-                      width="60px"
-                    />
-                  </Box>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <PopoverArrow />
-                  <PopoverCloseButton />
-                  <PopoverHeader display="flex" justifyContent="space-between">
-                    <Box fontSize="2xl">
-                      <b>{weapon.name}</b>
-                    </Box>
-                    <Box paddingRight={6} display="flex" alignItems="center">
-                      <Box
-                        marginRight={2}
-                        textColor="#F9E006"
-                        fontWeight="bold"
-                        fontSize="2xl"
-                      >
-                        50
-                      </Box>
-                      <Image
-                        alt="icon"
-                        src="/assets/other/coins.svg"
-                        height="30px"
-                        width="30px"
-                      />
-                    </Box>
-                  </PopoverHeader>
-                  <PopoverBody>
-                    <Box>
-                      🩸 Dano:{" "}
-                      <b>
-                        {weapon.damage.min} - {weapon.damage.max}
-                      </b>
-                    </Box>
-                    <Box>
-                      🔪 Penetração: <b>{weapon.penetration}%</b>
-                    </Box>
-                    <Box>
-                      🛡 Bônus vs Armadura: <b>{weapon.armorShred}%</b>
-                    </Box>
-                    <Box>
-                      🍃 Modificador de Agilidade: <b>{weapon.quickness}%</b>
-                    </Box>
-                    <Box>
-                      🏋️‍♂️ Modificador de Força: <b>{weapon.strScale}</b>
-                    </Box>
-                    <Box>
-                      🤺 Modificador de Destreza: <b>{weapon.dexScale}</b>
-                    </Box>
-                    <Box>
-                      🎯 Alcance: <b>{weapon.atkRange}</b>
-                    </Box>
-                    <Box>
-                      ⚖ Peso: <b>{weapon.weight}</b>
-                    </Box>
 
-                    <Button
-                      display="flex"
-                      marginTop={4}
-                      backgroundColor="green"
-                      width="100%"
-                    >
-                      Comprar e Equipar
-                    </Button>
-                  </PopoverBody>
-                </PopoverContent>
-              </Popover>
-            ))}
-          </SimpleGrid>
+        <Box>
+          <Box textShadow="0px 0px 3px #bb0e98df" fontSize={32}>
+            ⚔ Armas
+          </Box>
+          <Divider height={2}></Divider>
+          <Wrap spacing={2} width="100%" marginTop={4} maxWidth="300px">
+            {weapons
+              .sort((a, b) => a.price - b.price)
+              .map((weapon) => (
+                <Weapon
+                  key={weapon?.name}
+                  weapon={weapon}
+                  onSelect={onSelect}
+                  gold={gold}
+                  onBuy={onBuy}
+                />
+              ))}
+          </Wrap>
         </Box>
+
         <Box>
-          <Box fontSize={32}>⛑ Capacetes</Box>
+          <Box textShadow="0px 0px 3px #bb0e98df" fontSize={32}>
+            🛡 Armaduras
+          </Box>
           <Divider height={2}></Divider>
-          <SimpleGrid columns={5} spacing={2} width="100%" marginTop={4}>
-            {helmets.map((helmet) => (
-              <Popover key={helmet.name}>
-                {/* @ts-ignore */}
-                <PopoverTrigger>
-                  <Box
-                    width="60px"
-                    height="60px"
-                    cursor="pointer"
-                    backgroundColor="rgba(174, 174, 174, .67)"
-                    border="solid 2px #3389AD"
-                    borderRadius="5px"
-                    display="flex"
-                    justifyContent="center"
-                  >
-                    <Image
-                      alt="icon"
-                      src={
-                        /* @ts-ignore */
-                        assetMap[helmet.name] || "/assets/character/frog.svg"
-                      }
-                      height="60px"
-                      width="60px"
-                    />
-                  </Box>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <PopoverArrow />
-                  <PopoverCloseButton />
-                  <PopoverHeader display="flex" justifyContent="space-between">
-                    <Box fontSize="2xl">
-                      <b>{helmet.name}</b>
-                    </Box>
-                    <Box paddingRight={6} display="flex" alignItems="center">
-                      <Box
-                        marginRight={2}
-                        textColor="#F9E006"
-                        fontWeight="bold"
-                        fontSize="2xl"
-                      >
-                        50
-                      </Box>
-                      <Image
-                        alt="icon"
-                        src="/assets/other/coins.svg"
-                        height="30px"
-                        width="30px"
-                      />
-                    </Box>
-                  </PopoverHeader>
-                  <PopoverBody>
-                    <Box>
-                      🩸 HP Armadura: <b>{helmet.armorHp}</b>
-                    </Box>
-
-                    <Box>
-                      🍃 Modificador de Agilidade: <b>{helmet.quickness}%</b>
-                    </Box>
-                    <Box>
-                      🏋️‍♂️ Força:{" "}
-                      <b>
-                        {helmet.str >= 0 ? "+" : "-"}
-                        {helmet.str}
-                      </b>
-                    </Box>
-                    <Box>
-                      🤺 Destreza:{" "}
-                      <b>
-                        {helmet.dex >= 0 ? "+" : ""}
-                        {helmet.dex}
-                      </b>
-                    </Box>
-                    <Box>
-                      ⚖ Peso: <b>{helmet.weight}</b>
-                    </Box>
-
-                    <Button
-                      display="flex"
-                      marginTop={2}
-                      backgroundColor="green"
-                      width="100%"
-                    >
-                      Comprar e Equipar
-                    </Button>
-                  </PopoverBody>
-                </PopoverContent>
-              </Popover>
-            ))}
-          </SimpleGrid>
+          <Wrap spacing={2} width="100%" marginTop={4} maxWidth="300px">
+            {chests
+              .sort((a, b) => a.price - b.price)
+              .map((chest) => (
+                <Armor
+                  key={chest?.name}
+                  armor={chest}
+                  onSelect={onSelect}
+                  gold={gold}
+                  onBuy={onBuy}
+                />
+              ))}
+          </Wrap>
         </Box>
+
         <Box>
-          <Box fontSize={32}>🛡 Armaduras</Box>
+          <Box textShadow="0px 0px 3px #bb0e98df" fontSize={32}>
+            ⛑ Capacetes
+          </Box>
           <Divider height={2}></Divider>
-          <SimpleGrid columns={5} spacing={2} width="100%" marginTop={4}>
-            {chests.map((chest) => (
-              <Popover key={chest.name}>
-                {/* @ts-ignore */}
-                <PopoverTrigger>
-                  <Box
-                    width="60px"
-                    height="60px"
-                    cursor="pointer"
-                    backgroundColor="rgba(174, 174, 174, .67)"
-                    border="solid 2px #3389AD"
-                    borderRadius="5px"
-                    display="flex"
-                    justifyContent="center"
-                  >
-                    <Image
-                      alt="icon"
-                      /* @ts-ignore */
-                      src={assetMap[chest.name] || "/assets/character/frog.svg"}
-                      height="60px"
-                      width="60px"
-                    />
-                  </Box>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <PopoverArrow />
-                  <PopoverCloseButton />
-                  <PopoverHeader display="flex" justifyContent="space-between">
-                    <Box fontSize="2xl">
-                      <b>{chest.name}</b>
-                    </Box>
-                    <Box paddingRight={6} display="flex" alignItems="center">
-                      <Box
-                        marginRight={2}
-                        textColor="#F9E006"
-                        fontWeight="bold"
-                        fontSize="2xl"
-                      >
-                        50
-                      </Box>
-                      <Image
-                        alt="icon"
-                        src="/assets/other/coins.svg"
-                        height="30px"
-                        width="30px"
-                      />
-                    </Box>
-                  </PopoverHeader>
-                  <PopoverBody>
-                    <Box>
-                      🩸 HP Armadura: <b>{chest.armorHp}</b>
-                    </Box>
-
-                    <Box>
-                      🍃 Modificador de Agilidade: <b>{chest.quickness}%</b>
-                    </Box>
-                    <Box>
-                      🏋️‍♂️ Força:{" "}
-                      <b>
-                        {chest.str >= 0 ? "+" : "-"}
-                        {chest.str}
-                      </b>
-                    </Box>
-                    <Box>
-                      🤺 Destreza:{" "}
-                      <b>
-                        {chest.dex >= 0 ? "+" : ""}
-                        {chest.dex}
-                      </b>
-                    </Box>
-                    <Box>
-                      ⚖ Peso: <b>{chest.weight}</b>
-                    </Box>
-
-                    <Button
-                      display="flex"
-                      marginTop={2}
-                      backgroundColor="green"
-                      width="100%"
-                    >
-                      Comprar e Equipar
-                    </Button>
-                  </PopoverBody>
-                </PopoverContent>
-              </Popover>
-            ))}
-          </SimpleGrid>
+          <Wrap spacing={2} width="100%" marginTop={4} maxWidth="300px">
+            {helmets
+              .sort((a, b) => a.price - b.price)
+              .map((helmet) => (
+                <Armor
+                  key={helmet?.name}
+                  armor={helmet}
+                  onSelect={onSelect}
+                  gold={gold}
+                  onBuy={onBuy}
+                />
+              ))}
+          </Wrap>
         </Box>
       </Box>
     </Box>

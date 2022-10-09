@@ -5,10 +5,12 @@ import Particles from "../components/particles";
 import "../styles/global.css";
 
 const customTheme = extendTheme({
+  shadows: { outline: "0 0 0 3px black" },
   config: {
     useSystemColorMode: false,
     initialColorMode: "dark",
   },
+
   colors: {
     karpov: {
       100: "#12bd02",
@@ -45,8 +47,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Image
           alt="bagui"
           src="/assets/rock-top-left.svg"
-          height={250}
-          width={250}
+          height={130}
+          width={130}
         />
       </Box>
 
@@ -54,8 +56,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Image
           alt="bagui"
           src="/assets/rock-bottom-left.svg"
-          height={250}
-          width={250}
+          height={130}
+          width={130}
         />
       </Box>
 
@@ -63,8 +65,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Image
           alt="bagui"
           src="/assets/rock-bottom-right.svg"
-          height={250}
-          width={250}
+          height={130}
+          width={130}
         />
       </Box>
 
@@ -72,8 +74,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Image
           alt="bagui"
           src="/assets/rock-top-right.svg"
-          height={250}
-          width={250}
+          height={130}
+          width={130}
         />
       </Box>
     </ChakraProvider>

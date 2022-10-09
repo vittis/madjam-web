@@ -2,35 +2,58 @@ import { Box, Button, Divider } from "@chakra-ui/react";
 import Image from "next/image";
 
 export interface CardProps {
-  index?: number;
+  id?: string;
   avatar: string;
-  background: string;
-  weapon: string;
-  armor: string;
-  helmet: string;
+  background?: string;
+  weapon?: string;
+  armor?: string;
+  helmet?: string;
   removeCard?: Function;
+  hasSelection?: Boolean;
+  onEquip?: Function;
 }
 
 export default function Card({
-  index,
+  id,
   avatar,
   background,
   weapon,
   armor,
   helmet,
   removeCard,
+  hasSelection,
+  onEquip,
 }: CardProps) {
   return (
     <>
       <Box
-        width={220}
+        /* @ts-ignore */
+        onClick={hasSelection ? onEquip : () => {}}
+        pb={2}
+        minWidth={200}
+        maxWidth={200}
         height="100%"
         backgroundColor="#3E3B3B"
-        border="solid 3px #3389AD"
+        border={
+          hasSelection
+            ? "solid 3px var(--chakra-colors-pink-300)"
+            : "solid 3px black"
+        }
+        borderStyle="groove"
         borderRadius={8}
-        _hover={{ boxShadow: "outline" }}
-        boxShadow="2xl"
+        transition="all 0.2s"
+        _hover={
+          hasSelection
+            ? {
+                boxShadow: "0 0 0 3px var(--chakra-colors-pink-300)",
+                border: "solid 1px var(--chakra-colors-pink-300)",
+                transform: "scale(1.05)",
+              }
+            : {}
+        }
+        boxShadow={"2xl"}
         position="relative"
+        cursor={hasSelection ? "pointer" : "initial"}
       >
         {removeCard && (
           <Button
@@ -38,7 +61,7 @@ export default function Card({
             variant="ghost"
             position="absolute"
             right={0}
-            onClick={() => removeCard(index)}
+            onClick={() => removeCard(id)}
           >
             ❌
           </Button>
@@ -53,7 +76,7 @@ export default function Card({
           <Box
             height={20}
             width={20}
-            backgroundColor="#4AB3EE"
+            backgroundColor="#bb0e98df"
             borderRadius="50%"
           ></Box>
           <Box position="absolute" top="-6px" left="25%">
@@ -65,40 +88,77 @@ export default function Card({
             ></Image>
           </Box>
         </Box>
-        <Box textAlign="center" marginTop={4}>
-          {background}
-        </Box>
+        {background ? (
+          <Box
+            textShadow="0px 2px 1px var(--chakra-colors-purple-700)"
+            textAlign="center"
+            marginTop={4}
+            height="24px"
+            fontWeight="bold"
+          >
+            {background}
+          </Box>
+        ) : (
+          <Box
+            marginTop={4}
+            textAlign="center"
+            width="100%"
+            height="24px"
+            color="gray"
+          >
+            <Box px={3} as="b"></Box>
+          </Box>
+        )}
+
         <Box display="flex" justifyContent="center" marginTop={1} gap={4}>
           <Divider maxWidth="35%" height={2}></Divider>
           <Box
             height={2}
             width={2}
             marginTop="3px"
-            backgroundColor="#4AB3EE"
+            backgroundColor="#bb0e98df"
             borderRadius="50%"
           ></Box>
           <Divider textAlign="center" maxWidth="35%" height={2}></Divider>
         </Box>
-        <Box marginLeft={8} marginTop={3} fontSize="14px" lineHeight={7}>
-          <Box>
+        <Box p={1} marginTop={3} fontSize="14px" lineHeight={7}>
+          <Box display="flex" gap="1">
             <Box as="span" fontSize="16px">
-              🗡
+              ⚔
             </Box>{" "}
-            {weapon}
-          </Box>
-          <Box>
-            <Box as="span" fontSize="16px">
-              🎓
+            <Box
+              fontSize="sm"
+              textShadow="0px 2px 1px var(--chakra-colors-purple-700)"
+              fontWeight="bold"
+            >
+              {weapon}
             </Box>
-            {"  "}
-            {helmet}
           </Box>
-          <Box>
+
+          <Box display="flex" gap="1">
             <Box as="span" fontSize="16px">
-              🧥
+              ⛑
+            </Box>{" "}
+            <Box
+              fontSize="sm"
+              textShadow="0px 2px 1px var(--chakra-colors-purple-700)"
+              fontWeight="bold"
+            >
+              {helmet}
             </Box>
-            {"  "}
-            {armor}
+          </Box>
+
+          <Box display="flex" gap="1">
+            <Box as="span" fontSize="16px">
+              👕
+            </Box>{" "}
+            <Box
+              fontSize="sm"
+              textShadow="0px 2px 1px var(--chakra-colors-purple-700)"
+              fontWeight="bold"
+            >
+              {armor}
+            </Box>
           </Box>
         </Box>
       </Box>

@@ -12,7 +12,7 @@ import {
   ModalOverlay,
   ToastId,
   useToast,
-  WrapItem
+  WrapItem,
 } from "@chakra-ui/react";
 import * as Colyseus from "colyseus.js";
 import type { NextPage } from "next";
@@ -65,7 +65,7 @@ const Home: NextPage = () => {
           console.log({ rooms });
         });
 
-        /* room.onMessage("onStartSetup", async (data) => {
+        room.onMessage("onStartSetup", async (data) => {
           console.log({ data });
           console.log("onStartSetup");
           console.log(lobbyMembers);
@@ -81,9 +81,9 @@ const Home: NextPage = () => {
             // router.push(`/game/kkkmasein`);
             router.push(`/setup`);
           });
-        }); */
+        });
 
-        room.onMessage("onStartGame", async (data) => {
+        /* room.onMessage("onStartGame", async (data) => {
           console.log({ data });
           console.log("onStartGame");
           console.log(lobbyMembers);
@@ -98,7 +98,7 @@ const Home: NextPage = () => {
             console.log("REDIRECT START GAME PLS");
             router.push(`/game/kkkmasein`);
           });
-        });
+        }); */
 
         room.onStateChange((state) => {
           const members: any[] = [];
@@ -138,7 +138,12 @@ const Home: NextPage = () => {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader display="flex" justifyContent="center" fontSize="3xl">
+          <ModalHeader
+            textShadow="0px 0px 10px #bb0e98df"
+            display="flex"
+            justifyContent="center"
+            fontSize="3xl"
+          >
             Bem-vindo de volta, Comandante 🦸‍♂️
           </ModalHeader>
           <form
@@ -174,7 +179,7 @@ const Home: NextPage = () => {
             </ModalBody>
             <ModalFooter display="flex" justifyContent="center">
               <Button type="submit" colorScheme="orange">
-                Vem Monstro 💪
+                Vem Monstro 🚀
               </Button>
             </ModalFooter>
           </form>
@@ -182,7 +187,7 @@ const Home: NextPage = () => {
       </Modal>
       {!isModalOpen && (
         <Container centerContent>
-          <Heading mt={8} mb={5} size="2xl">
+          <Heading textShadow="0px 0px 10px #bb0e98df" mt={8} mb={5} size="2xl">
             🐭🦀🐸🐦🦎🦇
           </Heading>
 
@@ -216,7 +221,12 @@ const Home: NextPage = () => {
                 Buscar Partida
               </Button>
 
-              <Heading mt="5" mb={1} size="lg">
+              <Heading
+                textShadow="0px 0px 10px #bb0e98df"
+                mt="5"
+                mb={1}
+                size="lg"
+              >
                 Hall da Fama 👑
               </Heading>
               {lobbyMembers
@@ -232,7 +242,7 @@ const Home: NextPage = () => {
 
               {lobbyMembers?.filter((m) => m.isMatchmaking).length > 0 && (
                 <>
-                  <Heading mt={4}>
+                  <Heading textShadow="0px 0px 10px #bb0e98df" mt={4}>
                     Fila 🛰{" "}
                     <Box fontSize="lg" as="span" color="orange.400">
                       ({lobbyMembers?.filter((m) => m.isMatchmaking).length}/2)
