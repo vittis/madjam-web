@@ -12,14 +12,18 @@ import {
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { BsFillPauseFill, BsFillPlayFill } from "react-icons/bs";
-import { gameRoom } from "..";
 import Tile from "../../components/Game/tile";
+import { useWsClient } from "../../context/socketContext";
+import useSubscribe from "../../context/useSubscribe";
 
-const MAX_COL = 7;
+const MAX_COL = 8;
 const MAX_ROW = 5;
 
 const Game = () => {
   const router = useRouter();
+  const gameId = router.query.id;
+  const { client, clientState } = useWsClient();
+
   const [allHistory, setAllHistory] = useState<{ units: any[] }[]>([]);
   const [currentStep, setCurrentStep] = useState<{ units: any[] }>();
   const [stepIndex, setStepIndex] = useState(-1);
@@ -29,19 +33,22 @@ const Game = () => {
   const [running, setRunning] = useState(false);
 
   useEffect(() => {
-    gameRoom.send("askHistory", {});
+    if (clientState !== "connected") {
+      return;
+    }
+    client?.action("startGame", { id: gameId });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clientState]);
 
-    gameRoom.onMessage("sendHistory", (message) => {
-      console.log("CHEGOOO");
-      console.log(message.history);
-      if (!running && message.history) {
-        setRunning(true);
-        setAllHistory(message.history);
-        setStepIndex(0);
-        setCurrentStep(message.history[0]);
-      }
-    });
-  }, []);
+  useSubscribe(`game:${gameId}`, ({ message }: any) => {
+    console.log("game recebe message", { message });
+    if (!running && message.history) {
+      setRunning(true);
+      setAllHistory(message.history);
+      setStepIndex(0);
+      setCurrentStep(message.history[0]);
+    }
+  });
 
   useEffect(() => {
     if (!running) {
@@ -117,12 +124,7 @@ const Game = () => {
       </Flex>
 
       <Flex alignItems="center" justifyContent="center">
-        <SimpleGrid
-          columns={MAX_COL}
-          spacingX="20px"
-          spacingY="20px"
-          width={MAX_COL * 150}
-        >
+        <SimpleGrid columns={MAX_COL} spacing={0} width={MAX_COL * 110}>
           {Array.from(Array(MAX_COL * MAX_ROW), (_, i) => {
             const row = Math.floor(i / MAX_COL);
             let col = ((i + 1) % MAX_COL) - 1;
@@ -136,10 +138,6 @@ const Game = () => {
           })}
         </SimpleGrid>
       </Flex>
-
-      {/* hp ❤
-        movement 🏃‍♂️
-        attack ⚔ */}
 
       {/* history && history.units.map() */}
 

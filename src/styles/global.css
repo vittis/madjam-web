@@ -1,6 +1,7 @@
 html {
   width: 100vw;
   min-height: 100vh;
+  overflow: hidden;
 }
 
 #__next {
@@ -23,5 +24,6 @@ body {
 
 ::-webkit-scrollbar {
   width: 0px;
-  background: transparent; /* make scrollbar transparent */
+  background: transparent;
+  /* make scrollbar transparent */
 }

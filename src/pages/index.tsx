@@ -23,6 +23,8 @@ import { useEffect, useRef, useState } from "react";
 
 let client = new Colyseus.Client("ws://localhost:2567");
 
+export let gameRoom: Colyseus.Room;
+
 declare global {
   // eslint-disable-next-line no-unused-vars
   interface Window {
@@ -65,7 +67,19 @@ const Home: NextPage = () => {
 
         room.onMessage("onStartGame", async (data) => {
           console.log({ data });
-          console.log("REDIRECT START GAME PLS");
+          console.log("onStartGame");
+          console.log(lobbyMembers);
+          console.log(lobbyRoom.current?.sessionId);
+          gameRoom = await client.joinOrCreate("gameRoom", {
+            animal: data.animal,
+            name: data.name,
+          });
+
+          gameRoom.onMessage("reallyStartGame", async () => {
+            console.log("reallyStartGame");
+            console.log("REDIRECT START GAME PLS");
+            router.push(`/game/kkkmasein`);
+          });
         });
 
         room.onStateChange((state) => {
@@ -79,7 +93,7 @@ const Home: NextPage = () => {
             });
           });
 
-          console.log({ members });
+          console.log("setting", { members });
           setLobbyMembers(members);
         });
 
@@ -132,6 +146,7 @@ const Home: NextPage = () => {
             >
               <Box>Como devo te chamar? 👀</Box>
               <Input
+                autoFocus
                 placeholder="Nome"
                 maxWidth="65%"
                 value={name}
@@ -206,7 +221,7 @@ const Home: NextPage = () => {
                     </Box>
                   </Heading>
                   <Box
-                    pt={0}
+                    pt={2}
                     pb={4}
                     pl={4}
                     pr={4}
