@@ -65,7 +65,25 @@ const Home: NextPage = () => {
           console.log({ rooms });
         });
 
-        room.onMessage("onStartGame", async (data) => {
+        room.onMessage("onStartSetup", async (data) => {
+          console.log({ data });
+          console.log("onStartSetup");
+          console.log(lobbyMembers);
+          console.log(lobbyRoom.current?.sessionId);
+          gameRoom = await client.joinOrCreate("gameRoom", {
+            animal: data.animal,
+            name: data.name,
+          });
+
+          gameRoom.onMessage("reallyStartSetup", async () => {
+            console.log("reallyStartGame");
+            console.log("REDIRECT START GAME PLS");
+            // router.push(`/game/kkkmasein`);
+            router.push(`/setup`);
+          });
+        });
+
+        /* room.onMessage("onStartGame", async (data) => {
           console.log({ data });
           console.log("onStartGame");
           console.log(lobbyMembers);
@@ -80,7 +98,7 @@ const Home: NextPage = () => {
             console.log("REDIRECT START GAME PLS");
             router.push(`/game/kkkmasein`);
           });
-        });
+        }); */
 
         room.onStateChange((state) => {
           const members: any[] = [];
