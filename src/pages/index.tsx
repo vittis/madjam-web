@@ -41,6 +41,8 @@ const ANIMALS = {
   CRAB: "🦀",
 };
 
+let lobbyRoom: Colyseus.Room;
+
 const Home: NextPage = () => {
   const toast = useToast();
   const matchmakingToast = useRef<ToastId>();
@@ -51,25 +53,23 @@ const Home: NextPage = () => {
   const [name, setName] = useState("");
   const [lobbyMembers, setLobbyMembers] = useState<any[]>([]);
 
-  const lobbyRoom = useRef<Colyseus.Room>();
-
   useEffect(() => {
     const join = async () => {
       try {
-        const room = await client.joinOrCreate<any>("lobby");
-        console.log("joined successfully", room);
+        lobbyRoom = await client.joinOrCreate<any>("lobby");
+        console.log("joined successfully", lobbyRoom);
 
-        room.onMessage("listRooms", async () => {
+        lobbyRoom.onMessage("listRooms", async () => {
           console.log("listRooms");
           const rooms = await client.getAvailableRooms("gameRoom");
           console.log({ rooms });
         });
 
-        room.onMessage("onStartSetup", async (data) => {
+        lobbyRoom.onMessage("onStartSetup", async (data) => {
           console.log({ data });
           console.log("onStartSetup");
           console.log(lobbyMembers);
-          console.log(lobbyRoom.current?.sessionId);
+          console.log(lobbyRoom.sessionId);
           gameRoom = await client.joinOrCreate("gameRoom", {
             animal: data.animal,
             name: data.name,
@@ -100,7 +100,7 @@ const Home: NextPage = () => {
           });
         }); */
 
-        room.onStateChange((state) => {
+        lobbyRoom.onStateChange((state) => {
           const members: any[] = [];
           state.players.forEach((value: any, key: any) => {
             members.push({
@@ -114,8 +114,6 @@ const Home: NextPage = () => {
           console.log("setting", { members });
           setLobbyMembers(members);
         });
-
-        lobbyRoom.current = room;
       } catch (e) {
         console.error("join error", e);
       }
@@ -125,7 +123,7 @@ const Home: NextPage = () => {
 
   const isOnMatchmaking = !!lobbyMembers
     .filter((m) => !!m.isMatchmaking)
-    .find((m) => m.id === lobbyRoom.current?.sessionId);
+    .find((m) => m.id === lobbyRoom?.sessionId);
 
   return (
     <>
@@ -149,7 +147,7 @@ const Home: NextPage = () => {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              lobbyRoom.current?.send("setName", { name });
+              lobbyRoom?.send("setName", { name });
               setIsModalOpen(false);
               /* client?.action("setName", { name }, (data: any) => {
                 console.log({ data });
@@ -215,7 +213,7 @@ const Home: NextPage = () => {
                   lobbyMembers?.filter((m) => m.isMatchmaking).length === 2
                 }
                 onClick={() => {
-                  lobbyRoom.current?.send("setIsMatchmaking", {});
+                  lobbyRoom?.send("setIsMatchmaking", {});
                 }}
               >
                 Buscar Partida
@@ -289,7 +287,7 @@ const Home: NextPage = () => {
                       isOnMatchmaking && (
                         <Button
                           onClick={() => {
-                            lobbyRoom.current?.send("startGame");
+                            lobbyRoom?.send("startGame");
                           }}
                           mt={2}
                           variant="outline"

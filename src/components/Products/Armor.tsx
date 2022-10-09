@@ -40,7 +40,7 @@ function Armor({ armor, onSelect, gold, onBuy }: any) {
               position="relative"
             >
               <Box
-                zIndex={10}
+                zIndex={9}
                 position="absolute"
                 top="-2px"
                 left="2px"
@@ -123,7 +123,6 @@ function Armor({ armor, onSelect, gold, onBuy }: any) {
                 onClick={() => {
                   onSelect({ ...armor, type: armor.slot });
                   onClose();
-                  onBuy(armor.price);
                 }}
               >
                 Comprar e Equipar

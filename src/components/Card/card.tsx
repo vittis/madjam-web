@@ -4,10 +4,10 @@ import Image from "next/image";
 export interface CardProps {
   id?: string;
   avatar: string;
-  background?: string;
-  weapon?: string;
-  armor?: string;
-  helmet?: string;
+  background?: { name: string; price: number };
+  weapon?: { name: string; price: number };
+  armor?: { name: string; price: number };
+  helmet?: { name: string; price: number };
   removeCard?: Function;
   hasSelection?: Boolean;
   onEquip?: Function;
@@ -96,7 +96,7 @@ export default function Card({
             height="24px"
             fontWeight="bold"
           >
-            {background}
+            {background.name}
           </Box>
         ) : (
           <Box
@@ -131,7 +131,7 @@ export default function Card({
               textShadow="0px 2px 1px var(--chakra-colors-purple-700)"
               fontWeight="bold"
             >
-              {weapon}
+              {weapon?.name}
             </Box>
           </Box>
 
@@ -144,7 +144,7 @@ export default function Card({
               textShadow="0px 2px 1px var(--chakra-colors-purple-700)"
               fontWeight="bold"
             >
-              {helmet}
+              {helmet?.name}
             </Box>
           </Box>
 
@@ -157,7 +157,7 @@ export default function Card({
               textShadow="0px 2px 1px var(--chakra-colors-purple-700)"
               fontWeight="bold"
             >
-              {armor}
+              {armor?.name}
             </Box>
           </Box>
         </Box>

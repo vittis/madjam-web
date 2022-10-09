@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { assetMap } from "../assetMap";
 
-export default function Weapon({ weapon, onSelect, gold, onBuy }: any) {
+export default function Weapon({ weapon, onSelect, gold }: any) {
   return (
     <Popover key={weapon.name}>
       {({ onClose }) => (
@@ -40,7 +40,7 @@ export default function Weapon({ weapon, onSelect, gold, onBuy }: any) {
               position="relative"
             >
               <Box
-                zIndex={10}
+                zIndex={9}
                 position="absolute"
                 top="-2px"
                 left="2px"
@@ -127,7 +127,6 @@ export default function Weapon({ weapon, onSelect, gold, onBuy }: any) {
                 onClick={() => {
                   onSelect({ ...weapon, type: "weapon" });
                   onClose();
-                  onBuy(weapon.price);
                 }}
               >
                 Comprar e Equipar

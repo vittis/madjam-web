@@ -40,7 +40,7 @@ export default function Background({ background, onSelect, gold, onBuy }: any) {
               position="relative"
             >
               <Box
-                zIndex={10}
+                zIndex={9}
                 position="absolute"
                 top="-2px"
                 left="2px"
@@ -120,7 +120,6 @@ export default function Background({ background, onSelect, gold, onBuy }: any) {
                 onClick={() => {
                   onSelect({ ...background, type: "background" });
                   onClose();
-                  onBuy(background.price);
                 }}
               >
                 Comprar e Equipar

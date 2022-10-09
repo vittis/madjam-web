@@ -58,6 +58,15 @@ export default function Setup() {
   };
 
   const removeCard = (id: string) => {
+    const card = cards.find((c) => c.id === id);
+    setGold(
+      gold +
+        (card?.weapon?.price || 0) +
+        (card?.armor?.price || 0) +
+        (card?.helmet?.price || 0) +
+        (card?.background?.price || 0)
+    );
+
     setCards(cards.filter((element) => element.id !== id));
   };
 
@@ -84,10 +93,10 @@ export default function Setup() {
       .filter((c) => !!c.background)
       .map((card) => ({
         from: gameRoom.sessionId,
-        background: card.background,
-        weapon: card.weapon,
-        armor: card.armor,
-        helmet: card.helmet,
+        background: card.background?.name,
+        weapon: card.weapon?.name,
+        armor: card.armor?.name,
+        helmet: card.helmet?.name,
       }));
   }, [cards]);
 
@@ -95,6 +104,13 @@ export default function Setup() {
 
   const onBuy = (price: number) => {
     setGold(Math.max(0, gold - price));
+  };
+
+  const confirmDisabled =
+    !!cards.every((c) => c.background) && cards.length !== 0;
+
+  const onClickConfirm = () => {
+    gameRoom.send("confirmSelection", { squad: finalSquad });
   };
 
   return (
@@ -112,7 +128,7 @@ export default function Setup() {
           mt={12}
           size="lg"
         >
-          Comandante, use seus recursos para recrutar tropas.
+          Comandante, use seus recursos para recrutar tropas.{" "}
         </Heading>
 
         <Flex alignItems="center" gap={3}>
@@ -133,12 +149,27 @@ export default function Setup() {
           />
         </Flex>
       </Box>
+
+      <Button
+        onClick={onClickConfirm}
+        disabled={!confirmDisabled}
+        size="sm"
+        boxShadow="outline"
+        variant="ghost"
+        colorScheme="green"
+        backgroundColor="green.700"
+        color="white"
+        mt={3}
+      >
+        Confirmar Esquadrão ✅
+      </Button>
+
       <Box
         display="flex"
         justifyContent="center"
         alignItems="center"
         gap={4}
-        marginTop={14}
+        marginTop="20px"
         width="80%"
         height="268px"
       >
@@ -155,7 +186,8 @@ export default function Setup() {
               hasSelection={hasSelection}
               onEquip={() => {
                 if (selected) {
-                  onBuy(selected.price);
+                  const goldToDeduct = selected.price;
+
                   setCards(
                     cards.map((c) => {
                       if (card.id !== c.id) {
@@ -163,16 +195,57 @@ export default function Setup() {
                       }
 
                       if (selected.type === "CHEST") {
-                        return { ...c, armor: selected.name };
+                        if (card.armor) {
+                          setGold(gold + card.armor.price - goldToDeduct);
+                        } else {
+                          setGold(gold - goldToDeduct);
+                        }
+                        return {
+                          ...c,
+                          armor: { name: selected.name, price: selected.price },
+                        };
                       }
                       if (selected.type === "HEAD") {
-                        return { ...c, helmet: selected.name };
+                        if (card.helmet) {
+                          setGold(gold + card.helmet.price - goldToDeduct);
+                        } else {
+                          setGold(gold - goldToDeduct);
+                        }
+                        return {
+                          ...c,
+                          helmet: {
+                            name: selected.name,
+                            price: selected.price,
+                          },
+                        };
                       }
                       if (selected.type === "weapon") {
-                        return { ...c, weapon: selected.name };
+                        if (card.weapon) {
+                          setGold(gold + card.weapon.price - goldToDeduct);
+                        } else {
+                          setGold(gold - goldToDeduct);
+                        }
+                        return {
+                          ...c,
+                          weapon: {
+                            name: selected.name,
+                            price: selected.price,
+                          },
+                        };
                       }
                       if (selected.type === "background") {
-                        return { ...c, background: selected.name };
+                        if (card.background) {
+                          setGold(gold + card.background.price - goldToDeduct);
+                        } else {
+                          setGold(gold - goldToDeduct);
+                        }
+                        return {
+                          ...c,
+                          background: {
+                            name: selected.name,
+                            price: selected.price,
+                          },
+                        };
                       }
 
                       const cardTemplate = {
@@ -267,6 +340,7 @@ export default function Setup() {
                   onSelect={onSelect}
                   gold={gold}
                   onBuy={onBuy}
+                  /* disabled={gold <= weapon.price} */
                 />
               ))}
           </Wrap>
