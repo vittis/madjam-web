@@ -29,6 +29,7 @@ export default function Setup() {
   const [weapons, setWeapons] = useState<any[]>([]);
   const [helmets, setHelmets] = useState<any[]>([]);
   const [chests, setChests] = useState<any[]>([]);
+  const [backgrounds, setBackgrounds] = useState<any[]>([]);
 
   const addCard = () => {
     const newCard = { ...card1, index: cards.length };
@@ -52,6 +53,8 @@ export default function Setup() {
 
       setWeapons(Object.values(data.weapons));
       setHelmets(Object.values(data.heads));
+      setChests(Object.values(data.chests));
+      setBackgrounds(Object.values(data.backgrounds));
     });
   }, []);
 
@@ -115,16 +118,87 @@ export default function Setup() {
           <Box fontSize={32}>👨‍🌾 Profissão</Box>
           <Divider height={2}></Divider>
           <SimpleGrid columns={5} spacing={2} width="100%" marginTop={4}>
-            <Box bg="tomato" width="60px" height="60px"></Box>
-            <Box bg="tomato" width="60px" height="60px"></Box>
-            <Box bg="tomato" width="60px" height="60px"></Box>
-            <Box bg="tomato" width="60px" height="60px"></Box>
-            <Box bg="tomato" width="60px" height="60px"></Box>
-            <Box bg="tomato" width="60px" height="60px"></Box>
-            <Box bg="tomato" width="60px" height="60px"></Box>
-            <Box bg="tomato" width="60px" height="60px"></Box>
-            <Box bg="tomato" width="60px" height="60px"></Box>
-            <Box bg="tomato" width="60px" height="60px"></Box>
+            {backgrounds.map((background) => (
+              <Popover key={background.name}>
+                {/* @ts-ignore */}
+                <PopoverTrigger>
+                  <Box
+                    width="60px"
+                    height="60px"
+                    cursor="pointer"
+                    backgroundColor="rgba(174, 174, 174, .67)"
+                    border="solid 2px #3389AD"
+                    borderRadius="5px"
+                    display="flex"
+                    justifyContent="center"
+                  >
+                    <Image
+                      alt="icon"
+                      src={"/assets/weapon/shortBow.svg"}
+                      height="60px"
+                      width="60px"
+                    />
+                  </Box>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <PopoverArrow />
+                  <PopoverCloseButton />
+                  <PopoverHeader display="flex" justifyContent="space-between">
+                    <Box fontSize="2xl">
+                      <b>{background.name}</b>
+                    </Box>
+                    <Box paddingRight={6} display="flex" alignItems="center">
+                      <Box
+                        marginRight={2}
+                        textColor="#F9E006"
+                        fontWeight="bold"
+                        fontSize="2xl"
+                      >
+                        50
+                      </Box>
+                      <Image
+                        alt="icon"
+                        src="/assets/other/coins.svg"
+                        height="30px"
+                        width="30px"
+                      />
+                    </Box>
+                  </PopoverHeader>
+                  <PopoverBody>
+                    <Box>
+                      🩸 HP : <b>{background.hp}</b>
+                    </Box>
+
+                    <Box>
+                      🍃 Agilidade: <b>{background.quickness}%</b>
+                    </Box>
+                    <Box>
+                      🏋️‍♂️ Força:{" "}
+                      <b>
+                        {background.str >= 0 ? "+" : "-"}
+                        {background.str}
+                      </b>
+                    </Box>
+                    <Box>
+                      🤺 Destreza:{" "}
+                      <b>
+                        {background.dex >= 0 ? "+" : ""}
+                        {background.dex}
+                      </b>
+                    </Box>
+
+                    <Button
+                      display="flex"
+                      marginTop={2}
+                      backgroundColor="green"
+                      width="100%"
+                    >
+                      Comprar e Equipar
+                    </Button>
+                  </PopoverBody>
+                </PopoverContent>
+              </Popover>
+            ))}
           </SimpleGrid>
         </Box>
         <Box>
@@ -314,16 +388,90 @@ export default function Setup() {
           <Box fontSize={32}>🛡 Armaduras</Box>
           <Divider height={2}></Divider>
           <SimpleGrid columns={5} spacing={2} width="100%" marginTop={4}>
-            <Box bg="tomato" width="60px" height="60px"></Box>
-            <Box bg="tomato" width="60px" height="60px"></Box>
-            <Box bg="tomato" width="60px" height="60px"></Box>
-            <Box bg="tomato" width="60px" height="60px"></Box>
-            <Box bg="tomato" width="60px" height="60px"></Box>
-            <Box bg="tomato" width="60px" height="60px"></Box>
-            <Box bg="tomato" width="60px" height="60px"></Box>
-            <Box bg="tomato" width="60px" height="60px"></Box>
-            <Box bg="tomato" width="60px" height="60px"></Box>
-            <Box bg="tomato" width="60px" height="60px"></Box>
+            {chests.map((chest) => (
+              <Popover key={chest.name}>
+                {/* @ts-ignore */}
+                <PopoverTrigger>
+                  <Box
+                    width="60px"
+                    height="60px"
+                    cursor="pointer"
+                    backgroundColor="rgba(174, 174, 174, .67)"
+                    border="solid 2px #3389AD"
+                    borderRadius="5px"
+                    display="flex"
+                    justifyContent="center"
+                  >
+                    <Image
+                      alt="icon"
+                      src="/assets/weapon/shortBow.svg"
+                      height="60px"
+                      width="60px"
+                    />
+                  </Box>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <PopoverArrow />
+                  <PopoverCloseButton />
+                  <PopoverHeader display="flex" justifyContent="space-between">
+                    <Box fontSize="2xl">
+                      <b>{chest.name}</b>
+                    </Box>
+                    <Box paddingRight={6} display="flex" alignItems="center">
+                      <Box
+                        marginRight={2}
+                        textColor="#F9E006"
+                        fontWeight="bold"
+                        fontSize="2xl"
+                      >
+                        50
+                      </Box>
+                      <Image
+                        alt="icon"
+                        src="/assets/other/coins.svg"
+                        height="30px"
+                        width="30px"
+                      />
+                    </Box>
+                  </PopoverHeader>
+                  <PopoverBody>
+                    <Box>
+                      🩸 HP Armadura: <b>{chest.armorHp}</b>
+                    </Box>
+
+                    <Box>
+                      🍃 Modificador de Agilidade: <b>{chest.quickness}%</b>
+                    </Box>
+                    <Box>
+                      🏋️‍♂️ Força:{" "}
+                      <b>
+                        {chest.str >= 0 ? "+" : "-"}
+                        {chest.str}
+                      </b>
+                    </Box>
+                    <Box>
+                      🤺 Destreza:{" "}
+                      <b>
+                        {chest.dex >= 0 ? "+" : ""}
+                        {chest.dex}
+                      </b>
+                    </Box>
+                    <Box>
+                      ⚖ Peso: <b>{chest.weight}</b>
+                    </Box>
+
+                    <Button
+                      display="flex"
+                      marginTop={2}
+                      backgroundColor="green"
+                      width="100%"
+                    >
+                      Comprar e Equipar
+                    </Button>
+                  </PopoverBody>
+                </PopoverContent>
+              </Popover>
+            ))}
           </SimpleGrid>
         </Box>
       </Box>
