@@ -76,12 +76,12 @@ export default function Card({
           <Box
             height={20}
             width={20}
-            backgroundColor="#bb0e98df"
+            backgroundColor={avatar === 'rat' ? '	#32CD32' : (avatar === 'octopus' ? '#00BFFF' : "#bb0e98df")}
             borderRadius="50%"
           ></Box>
           <Box position="absolute" top="-6px" left="25%">
             <Image
-              alt="rat"
+              alt="character"
               src={`/assets/character/${avatar}.svg`}
               height={100}
               width={100}
